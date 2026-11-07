@@ -1127,6 +1127,8 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   const CJ = () => { if (!LIVE) return (S.published || S.jobs || []).find((x) => x.id === "brompton") || null; const j = (S.published && S.published[0]) || (S.jobs && S.jobs[0]); return j || null; };
   const CJID = () => { const j = CJ(); return j ? j.id : "brompton"; };
   const sb = LIVE ? window.supabase.createClient(CFG.url, CFG.key) : null;
+  /* where the email link brings people back to: this exact page (not just the site root) */
+  const APP_URL = (typeof location !== "undefined" && /^https?:/.test(location.protocol)) ? location.origin + location.pathname.replace(/[^/]*$/, "") : "https://andrewciui.github.io/prime-app-web/";
   if (LIVE && CFG.debug) window.__primeSb = sb;
   const liveErr = (e) => { const m = (e && (e.message || e.error_description)) || "Something went wrong"; return /signups? not allowed|not found/i.test(m) ? "That email isn’t set up yet. Ask Andy to add you." : /after (\d+) seconds/i.test(m) ? "Give it " + (/after (\d+) seconds/i.exec(m)[1]) + " seconds, then try once more." : /email rate limit/i.test(m) ? "The email limit for this hour is used up. Try again after the hour, or paste the link from your last email below." : /rate limit|too many/i.test(m) ? "Too many tries. Wait a minute and try again." : /expired|invalid/i.test(m) ? "That code doesn’t match or has expired. Resend it." : m; };
 
@@ -1795,7 +1797,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) { L.err = "Enter your email like name@example.com."; render(); return; }
       if (CFG.reviewEmail && raw.toLowerCase() === String(CFG.reviewEmail).toLowerCase()) { L.err = ""; U.code = { acct: "office", via: "email", email: raw.toLowerCase(), value: "", err: "", busy: false, demo: null, review: true }; nav("login-code"); return; }
       L.err = ""; L.busy = true; render();
-      sb.auth.signInWithOtp({ email: raw.toLowerCase(), options: { shouldCreateUser: false } }).then((r) => {
+      sb.auth.signInWithOtp({ email: raw.toLowerCase(), options: { shouldCreateUser: false, emailRedirectTo: APP_URL } }).then((r) => {
         L.busy = false;
         if (r.error) { L.err = liveErr(r.error); render(); return; }
         U.code = { acct: "live", via: "email", email: raw.toLowerCase(), value: "", err: "", busy: false, demo: null };
@@ -3413,7 +3415,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         if (tokenHash) { c.busy = true; render(); sb.auth.verifyOtp({ token_hash: tokenHash, type: q(raw, "type") === "recovery" ? "recovery" : "magiclink" }).then(done); return; }
         c.linkErr = "That doesn’t look like a sign-in link. Paste the whole link from the email."; render(); return;
       }
-      case "lresend": if (LIVE && U.code && U.code.email) { sb.auth.signInWithOtp({ email: U.code.email, options: { shouldCreateUser: false } }).then((r) => toast(r.error ? liveErr(r.error) : "New code sent. It can take a minute to arrive.")); return; } toast("New code sent. It can take a minute to arrive."); return;
+      case "lresend": if (LIVE && U.code && U.code.email) { sb.auth.signInWithOtp({ email: U.code.email, options: { shouldCreateUser: false, emailRedirectTo: APP_URL } }).then((r) => toast(r.error ? liveErr(r.error) : "New code sent. It can take a minute to arrive.")); return; } toast("New code sent. It can take a minute to arrive."); return;
       case "lfill": if (!U.code) return; U.code.value = U.code.demo; U.code.err = ""; U.code.busy = true; render(); setTimeout(verifyCode, 650); return;
       case "lverify": verifyCode(); return;
       case "sso": if (LIVE) { toast("Google and Apple sign-in are coming. Use your email code for now."); return; } U.sso = arg; U.sheet = "sso"; renderSheet(); return;
