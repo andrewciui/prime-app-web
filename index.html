@@ -1796,6 +1796,17 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (LIVE) {
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) { L.err = "Enter your email like name@example.com."; render(); return; }
       if (CFG.reviewEmail && raw.toLowerCase() === String(CFG.reviewEmail).toLowerCase()) { L.err = ""; U.code = { acct: "office", via: "email", email: raw.toLowerCase(), value: "", err: "", busy: false, demo: null, review: true }; nav("login-code"); return; }
+      if (L.usePw) {
+        const pel = document.getElementById("l-pw"); const pw = (pel && pel.value) || L.pw || "";
+        if (!pw) { L.err = "Enter your password."; render(); return; }
+        L.err = ""; L.busy = true; render();
+        sb.auth.signInWithPassword({ email: raw.toLowerCase(), password: pw }).then((r) => {
+          L.busy = false; L.pw = "";
+          if (r.error || !r.data || !r.data.session) { L.err = /invalid login/i.test((r.error && r.error.message) || "") ? "That email and password don’t match. Try again, or get a code by email instead." : liveErr(r.error); render(); return; }
+          liveSignIn(r.data.session, true);
+        });
+        return;
+      }
       L.err = ""; L.busy = true; render();
       sb.auth.signInWithOtp({ email: raw.toLowerCase(), options: { shouldCreateUser: false, emailRedirectTo: APP_URL } }).then((r) => {
         L.busy = false;
@@ -2062,9 +2073,12 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           (LIVE ? "" : '<div class="lor">or get a code</div>') +
           (LIVE ? "" : '<div class="seg" role="group" aria-label="Get a code by">' + [["mobile", "Text me"], ["email", "Email me"]].map((o) => '<button type="button" data-act="lvia" data-arg="' + o[0] + '" ' + press(L.via === o[0]) + '>' + o[1] + '</button>').join("") + '</div>') +
           '<label class="field" for="l-val">' + (mob ? "Mobile number" : "Email") + '<span class="lfield' + (L.err ? " bad" : "") + '"><span aria-hidden="true">' + (mob ? "📱" : "✉️") + '</span><input id="l-val" type="' + (mob ? "tel" : "email") + '" inputmode="' + (mob ? "tel" : "email") + '" autocomplete="' + (mob ? "tel" : "email") + '" placeholder="' + (mob ? "0412 345 678" : "name@example.com") + '" value="' + esc(L.value) + '" data-in="lval"' + (L.err ? ' aria-invalid="true" aria-describedby="l-err"' : "") + '></span></label>' +
+          (LIVE && L.usePw ? '<label class="field" for="l-pw">Password<span class="lfield"><span aria-hidden="true">🔑</span><input id="l-pw" type="password" autocomplete="current-password" placeholder="Your password" value="' + esc(L.pw || "") + '" data-in="lpw"></span></label>' : "") +
           (L.err ? '<p class="lerr" id="l-err">' + esc(L.err) + '</p>' : "") +
-          '<button type="button" class="btn btn-primary" data-act="lsend"' + (L.busy ? " disabled" : "") + '>' + (L.busy ? '<span class="spin" aria-hidden="true"></span>Sending…' : "Send my code") + '</button>' +
-          '<p class="xs muted center">No password to remember. You stay signed in on this phone.</p>' + (LIVE ? '<button type="button" class="btn btn-text" data-act="lhavelink">I already have a sign-in link</button>' : "") + '</div>' +
+          '<button type="button" class="btn btn-primary" data-act="lsend"' + (L.busy ? " disabled" : "") + '>' + (L.busy ? '<span class="spin" aria-hidden="true"></span>' + (L.usePw ? "Signing in…" : "Sending…") : (L.usePw ? "Sign in" : "Send my code")) + '</button>' +
+          (L.usePw ? '<p class="xs muted center">You stay signed in on this phone.</p>' : '<p class="xs muted center">No password to remember. You stay signed in on this phone.</p>') +
+          (LIVE ? '<button type="button" class="btn btn-text" data-act="lpw">' + (L.usePw ? "Get a code by email instead" : "Sign in with a password instead") + '</button>' : "") +
+          (LIVE && !L.usePw ? '<button type="button" class="btn btn-text" data-act="lhavelink">I already have a sign-in link</button>' : "") + '</div>' +
         (LIVE ? "" : '<div class="stack"><div class="between"><span class="sm"><b>Try a demo account</b></span><span class="xs muted">The code fills in for you</span></div><div class="card list">' + ACCT_ORDER.map(acctRow).join("") + '</div></div>') +
         '<div class="lhelp"><p><b>New to the crew?</b> ' + (LIVE ? "Andy adds you first. Then sign in with your email and the code we send you." : "The office adds you first. Then sign in with your mobile, Google or Apple.") + '</p><p><b>Prime client?</b> ' + (LIVE ? "Use the email address on your quote." : "Use the mobile number on your quote.") + '</p></div>' +
         '<div class="lfoot"><img src="' + IMG.dulux + '" alt="Dulux Accredited Painter" class="badge"><div class="sm"><button type="button" class="linkbtn" data-act="toast" data-arg="Opens the privacy policy on the Prime website">Privacy policy</button> · <button type="button" class="linkbtn" data-act="toast" data-arg="Opens help and the office contact">Help</button></div><p class="xs muted center">' + (LIVE ? "🟢 Connected to the Prime database" : "Prototype with sample data") + '</p></div>' +
@@ -2663,6 +2677,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           '<label class="field">Name<input class="text" id="pp-name" data-in="pp-name" value="' + esc(f.name) + '" placeholder="First name"></label>' +
           '<label class="field">Email<input class="text" id="pp-email" type="email" data-in="pp-email" value="' + esc(f.email) + '" placeholder="name@example.com"' + (f.id ? " disabled" : "") + '></label>' +
           '<label class="field">Mobile (optional)<input class="text" id="pp-mobile" type="tel" data-in="pp-mobile" value="' + esc(f.mobile || "") + '" placeholder="04xx xxx xxx"></label>' +
+          '<label class="field">' + (f.id ? "New password (optional)" : "Starting password (optional)") + '<input class="text" id="pp-pw" type="text" autocomplete="off" placeholder="At least 8 characters; tell them in person"></label>' +
           '<div class="stack"><span class="sm muted"><b>Role</b></span><div class="opts">' + [["crew", "Crew"], ["subbie", "Subbie"], ["client", "Client"], ["office", "Office"]].map((o) => '<button type="button" class="opt" data-act="prole" data-arg="' + o[0] + '" ' + press(f.role === o[0]) + '>' + o[1] + '</button>').join("") + '</div></div>' +
           (f.role === "office" ? '<span class="sm muted">Office sees everything, including money.</span>' : '<div class="stack"><span class="sm muted"><b>On which jobs?</b></span><div class="opts">' + S.jobs.map((j) => '<button type="button" class="opt" data-act="pjob" data-arg="' + j.id + '" ' + press(f.jobs.indexOf(j.id) > -1) + '>' + esc(j.short) + '</button>').join("") + '</div></div>') +
           (f.role === "subbie" ? '<span class="sm muted">Subbies never see client names, contacts or money.</span>' : "") +
@@ -2908,6 +2923,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           '<div class="acctline"><span class="sm muted">Signed in with ' + how + '</span><b class="sm">' + esc(u.id || a.mobile) + '</b></div></div>' +
         (role === "crew" ? '<div class="card row mid" style="justify-content:space-between"><span class="col"><b>Brief alerts</b><span class="sm muted">A phone alert when tomorrow’s brief is sent</span></span><button type="button" class="switch" role="switch" aria-checked="' + S.briefAlerts + '" aria-label="Brief alerts" data-act="alerts"><span></span></button></div>' : "") +
         '<div class="card list"><button type="button" class="line selrow" data-act="toast" data-arg="Opens the privacy policy on the Prime website"><span>🔒 Privacy policy</span><span class="muted" aria-hidden="true">›</span></button><button type="button" class="line selrow" data-act="toast" data-arg="Opens help and the office contact"><span>💬 Help and contact</span><span class="muted" aria-hidden="true">›</span></button></div>' +
+        (LIVE && u.live ? '<div class="card pad col" style="gap:8px"><b>Password</b><span class="sm muted">Set one so you can sign in without waiting for an email.</span><input class="text" id="acct-pw" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" class="btn btn-outline" data-act="setpw">Set password</button></div>' : "") +
         '<button type="button" class="btn btn-outline" data-act="signout">Sign out</button>' +
         '<button type="button" class="btn btn-text danger" data-act="sheet" data-arg="delacct">Delete my account</button>' +
         (LIVE ? (role === "office" ? '<button type="button" class="btn btn-outline" data-act="people">👥 People and access</button>' : "") : '<div class="demo-box"><span class="sm muted"><b>Demo only:</b> jump straight to another account</span><div class="seg" role="group" aria-label="Demo account">' +
@@ -3401,6 +3417,13 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       case "sendreport": S.reportAt = nowTime(); toast("Report sent. Photos go to the office to approve."); U.burstAt = rect; U.flash = { sel: ".confirmed", cls: "flash" }; break;
       case "lvia": U.login.via = arg; U.login.err = ""; U.login.value = ""; render(); return;
       case "lsend": loginSend(); return;
+      case "lpw": { const el = document.getElementById("l-val"); if (el) U.login.value = el.value; U.login.usePw = !U.login.usePw; U.login.err = ""; render(); const pw = document.getElementById("l-pw"); if (pw) pw.focus(); return; }
+      case "setpw": {
+        const el = document.getElementById("acct-pw"); const pw = (el && el.value) || "";
+        if (pw.length < 8) { toast("Use at least 8 characters"); return; }
+        sb.auth.updateUser({ password: pw }).then((r) => { if (r.error) { toast("Couldn’t set the password: " + liveErr(r.error)); return; } if (el) el.value = ""; toast("Password set. You can sign in with it from now on."); });
+        return;
+      }
       case "ldemo": { const a = ACCTS[arg]; U.login.value = U.login.via === "email" ? a.email : a.mobile; U.login.err = ""; startCode(arg, U.login.via); return; }
       case "lback": U.code = null; nav("welcome"); return;
       case "lhavelink": { const el = document.getElementById("l-val"); const em = ((el && el.value) || U.login.value || "").trim().toLowerCase(); U.code = { acct: "live", via: "email", email: em || "you", value: "", err: "", busy: false, demo: null, link: "" }; nav("login-code"); return; }
@@ -3556,10 +3579,11 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       case "pjob": { const f = U.people && U.people.form; if (f) { const k = f.jobs.indexOf(arg); if (k > -1) f.jobs.splice(k, 1); else f.jobs.push(arg); } renderSheet(); return; }
       case "psave": {
         const P = U.people; const f = P && P.form; if (!f) return;
-        ["name", "email", "mobile"].forEach((k) => { const el = document.getElementById("pp-" + k); if (el && el.value != null) f[k] = el.value; });
+        ["name", "email", "mobile", "pw"].forEach((k) => { const el = document.getElementById("pp-" + k); if (el && el.value != null) f[k] = el.value; });
         if (!f.email.trim() && !f.id) { P.err = "Enter their email."; renderSheet(); return; }
+        if (f.pw && f.pw.length < 8) { P.err = "The password needs at least 8 characters."; renderSheet(); return; }
         P.busy = true; P.err = ""; renderSheet();
-        sb.functions.invoke("invite", { body: { email: f.email.trim().toLowerCase(), name: f.name.trim(), mobile: f.mobile.trim(), role: f.role, jobs: f.role === "office" ? [] : f.jobs } }).then((r) => {
+        sb.functions.invoke("invite", { body: { email: f.email.trim().toLowerCase(), name: f.name.trim(), mobile: f.mobile.trim(), role: f.role, jobs: f.role === "office" ? [] : f.jobs, password: f.pw || undefined } }).then((r) => {
           const err = r.error ? (r.error.message || "Couldn’t save") : (r.data && r.data.error);
           if (err) { P.busy = false; P.err = err; renderSheet(); return; }
           toast(f.id ? "Saved" : f.name + " can now sign in with " + f.email.trim());
@@ -3659,6 +3683,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (!k) return;
     if (k === "notes") { S.notes = e.target.value; save(); }
     else if (k === "lval") { U.login.value = e.target.value; }
+    else if (k === "lpw") { U.login.pw = e.target.value; }
     else if (k === "tn-title" && U.tNew) U.tNew.title = e.target.value;
     else if (k === "tn-steps" && U.tNew) U.tNew.steps = e.target.value;
     else if (k === "otp" && U.code) {
@@ -3685,7 +3710,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && U.sheet) { U.sheet = null; renderSheet(); }
     if (e.key === "Enter" && !e.shiftKey && e.target && e.target.id === "chat-in") { e.preventDefault(); chatSend(); }
-    if (e.key === "Enter" && e.target && e.target.id === "l-val") { e.preventDefault(); loginSend(); }
+    if (e.key === "Enter" && e.target && (e.target.id === "l-val" || e.target.id === "l-pw")) { e.preventDefault(); loginSend(); }
   });
   document.addEventListener("scroll", (e) => {
     const el = e.target;
