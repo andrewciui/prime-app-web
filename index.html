@@ -900,6 +900,70 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
 .fi .photos { width: 100%; }
 @media (prefers-reduced-motion: no-preference) { .chub .hubpane { animation: hubIn 0.28s var(--ease-out, ease-out); } }
 @keyframes hubIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+/* the day on site: on the way → on site → packed up (crew card, client card, office Today) */
+.trip, .ctoday { display: flex; flex-direction: column; gap: 10px; }
+.dhead { display: block; font-size: 18px; font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; }
+.trip .btnrow .btn { flex: 1 1 auto; white-space: nowrap; padding: 0 16px; }
+.ctoday > .btn { align-self: flex-start; }
+.tsteps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.tsteps i { height: 6px; border-radius: 999px; background: var(--soft); }
+.tsteps i.on { background: var(--link); }
+.tlbl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: -4px; font-size: 11px; color: var(--muted); }
+.tlbl span:nth-child(2) { text-align: center; } .tlbl span:last-child { text-align: right; }
+.tlbl span.on { color: var(--ink); font-weight: 600; }
+.ctoday.quiet { flex-direction: row; align-items: center; gap: 12px; }
+/* quick replies above a message box */
+.qr { display: flex; gap: 6px; overflow-x: auto; margin: 0 -2px; padding: 2px 2px 6px; scrollbar-width: none; }
+.qr::-webkit-scrollbar { display: none; }
+.qr .opt { flex: 0 0 auto; white-space: nowrap; font-size: 13px; padding: 6px 12px; min-height: 34px; }
+.composer .qr { padding: 0 4px; margin: 0; }
+/* order again, in the out-of-paint sheet */
+.line.again { border: 1.5px dashed var(--line); border-radius: 16px; background: var(--surface); text-align: left; width: 100%; }
+/* the counter card: big enough to hold up at the trade counter */
+.cnt { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 22px 18px; border-radius: 22px; background: var(--brand); color: #FFFFFF; text-align: center; }
+.cnt .k { font-size: 13px; color: var(--on-grad-muted); }
+.cnt .acct { font-size: 24px; font-weight: 700; line-height: 1.2; }
+.cnt .xs { color: var(--on-grad-muted); }
+.cnt .big { font-size: 42px; font-weight: 800; letter-spacing: 0.06em; color: var(--canary); line-height: 1.1; word-break: break-all; }
+.cnt .big.none { font-size: 20px; letter-spacing: 0; word-break: normal; }
+.cnt .its { align-self: stretch; margin-top: 12px; display: flex; flex-direction: column; }
+.cnt .it { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 2px; border-top: 1px solid rgba(255,255,255,0.16); font-size: 17px; text-align: left; }
+.cnt .it b { font-size: 22px; color: var(--canary); }
+/* ---------- Liquid Glass tab bar, after iOS 26: a floating capsule above the content, a glass lens under the selected tab,
+   content softly fading under it, and the bar shrinking out of the way while you scroll down ---------- */
+.tabbar { background: transparent; border-top: 0; -webkit-backdrop-filter: none; backdrop-filter: none; pointer-events: none;
+  padding: 0 max(16px, env(safe-area-inset-right, 0px)) max(12px, calc(env(safe-area-inset-bottom, 0px) - 6px)) max(16px, env(safe-area-inset-left, 0px)); }
+.tabbar::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(100% + 30px); pointer-events: none;
+  background: linear-gradient(to top, rgba(250,250,248,0.9) 0%, rgba(250,250,248,0.55) 50%, rgba(250,250,248,0) 100%);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  -webkit-mask-image: linear-gradient(to top, #000 40%, transparent); mask-image: linear-gradient(to top, #000 40%, transparent); }
+.tabbar-in { pointer-events: auto; position: relative; isolation: isolate; max-width: 420px; height: 64px; padding: 4px; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.66) 0%, rgba(255,255,255,0.4) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.9) brightness(1.05); backdrop-filter: blur(14px) saturate(1.9) brightness(1.05);
+  box-shadow: inset 0 1px 0.5px rgba(255,255,255,0.95), inset 0 -1px 1px rgba(255,255,255,0.4), inset 0 0 0 0.5px rgba(20,22,19,0.06), 0 12px 32px rgba(12,31,1,0.16), 0 2px 6px rgba(12,31,1,0.08);
+  transition: height 0.45s var(--spring), max-width 0.45s var(--spring); }
+.tabbar-in::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background: radial-gradient(120% 95% at 16% -12%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 55%), radial-gradient(80% 90% at 100% 125%, rgba(203,255,85,0.12) 0%, rgba(203,255,85,0) 60%); }
+.tabbar-in::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: linear-gradient(155deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.2) 35%, rgba(20,22,19,0.08) 65%, rgba(255,255,255,0.6) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.tabbar a { position: relative; z-index: 1; min-height: 0; height: 100%; gap: 1px; border-radius: 999px; font-size: 10px; font-weight: 600; letter-spacing: 0.01em; color: var(--ink); }
+.tabbar a > span:not(.ic) { display: block; max-height: 14px; line-height: 14px; overflow: hidden; transition: opacity 0.2s ease, max-height 0.35s var(--spring); }
+.tabbar a .ic, .tabbar a[aria-current="page"] .ic, .tabbar-in.hasind a[aria-current="page"] .ic { width: 44px; height: 28px; background: transparent; color: inherit; transition: transform 0.35s var(--spring); }
+.tabbar a[aria-current="page"] { color: var(--link); font-weight: 700; }
+.tabind { left: 4px; top: 4px; bottom: 4px; height: auto; width: 64px; z-index: 0; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(12,31,1,0.11) 0%, rgba(12,31,1,0.06) 100%);
+  box-shadow: inset 0 1px 0.5px rgba(255,255,255,0.75), inset 0 -0.5px 0 rgba(12,31,1,0.08), 0 1px 2px rgba(12,31,1,0.06);
+  transition: transform 0.55s var(--spring), width 0.3s ease, opacity 0.2s ease; }
+.tabbar a:active .ic { transform: scale(0.9); }
+.tbadge { top: -5px; right: -3px; box-shadow: 0 0 0 2px rgba(255,255,255,0.9); }
+.tabbar.tbmin .tabbar-in { height: 50px; max-width: 320px; }
+.tabbar.tbmin a > span:not(.ic) { opacity: 0; max-height: 0; }
+.confirm, .composer { bottom: calc(max(12px, env(safe-area-inset-bottom, 0px) - 6px) + 84px); }
+.wide .composer { bottom: 16px; }
+@media (prefers-reduced-transparency: reduce) { .tabbar-in { background: rgba(255,255,255,0.97); -webkit-backdrop-filter: none; backdrop-filter: none; } .tabbar::before { -webkit-backdrop-filter: none; backdrop-filter: none; } }
+@media (prefers-contrast: more) { .tabbar-in { box-shadow: inset 0 0 0 1px rgba(20,22,19,0.45), 0 8px 24px rgba(12,31,1,0.2); } }
+@media (prefers-reduced-motion: reduce) { .tabbar-in, .tabind, .tabbar a > span:not(.ic) { transition: none; } }
 </style>
 
 <main id="app" class="wrap"></main>
@@ -1266,7 +1330,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       paint: [
         { id: "p1", job: "duke", by: "Larry", cols: [{ n: "Ceiling White", p: "Ceiling flat", sz: "15 L" }], urg: "low", at: "2:40 pm", status: "new" }
       ],
-      pSeq: 2, pgot: {},
+      pSeq: 2, pgot: {}, dayEv: [],
       alerts: [
         { id: "a1", job: "bess", by: "Mariana", type: "order", text: "2 × Vivid White semi gloss 10 L for 6:30 am tomorrow", urg: "today", builder: false, at: "Tue 1:50 pm", status: "seen" },
         { id: "a2", job: "bess", by: "Tainan", type: "damage", text: "Rear deck boards lifted near the stairs. The builder should check them before we coat the posts.", urg: "today", builder: true, at: "Tue 2:15 pm", status: "new" }
@@ -1573,8 +1637,8 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       '<div class="bub">' + (img ? '<img src="' + img + '" alt="Photo from ' + esc(m.by) + '">' : m.imgKey ? '<span class="sm">📸 Photo kept on the phone that sent it</span>' : "") + (m.text ? '<span>' + fmtMsg(m.text, me) + '</span>' : "") + '</div>' +
       '<span class="mat">' + esc(m.at) + '</span></div></div>';
   }
-  function composer(jid) {
-    return '<div class="composer"><div class="mentions" id="mention-list" aria-label="People to tag"></div>' +
+  function composer(jid, qk) {
+    return '<div class="composer"><div class="mentions" id="mention-list" aria-label="People to tag"></div>' + (qk && QR[qk] ? qrRow(qk, "qr") : "") +
       (U.chatImg ? '<div class="cimg"><img class="thumb" src="' + U.chatImg + '" alt="Photo to send"><span class="sm muted grow">Photo ready to send</span><button type="button" class="btn btn-text btn-sm" data-act="chatnoimg">Remove</button></div>' : "") +
       '<div class="cbar"><label class="cbtn" for="c-photo" aria-label="Add a photo">📷<input type="file" id="c-photo" accept="image/*" data-chg="cphoto"></label>' +
       '<button type="button" class="cbtn" data-act="atbtn" aria-label="Tag someone">@</button>' +
@@ -1599,7 +1663,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const body = msgs.length ? msgs.map((m) => bubble(m, me)).join("") : '<div class="card empty"><span class="tile" aria-hidden="true">💬</span><h2>No messages yet</h2><p class="sub">' + (aud === "client" ? "Nothing from the client yet. Anything you send here goes to them, not the crew." : "Start the chat for " + esc(jobShort(jid)) + ". Type @ to tag someone.") + '</p></div>';
     return '<section class="view chatv">' +
       '<div class="chathead">' + (office ? '<a class="back2" href="#office-plan" aria-label="Back">' + IC.back + '</a>' : "") + '<div class="col grow"><h1 style="font-size:22px">💬 ' + esc(jobShort(jid)) + '</h1><span class="sm muted">' + esc(names(ppl)) + '</span></div>' + avs(ppl) + '</div>' +
-      sites + audSeg + '<div class="msgs" aria-live="polite">' + body + '</div>' + composer(jid) + '</section>';
+      sites + audSeg + '<div class="msgs" aria-live="polite">' + body + '</div>' + composer(jid, office ? (aud === "client" ? "officeClient" : "office") : "crew") + '</section>';
   }
   function updateMentions() {
     const box = document.getElementById("mention-list"); const inp = document.getElementById("chat-in");
@@ -1837,13 +1901,148 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     });
   }
   function notifyEv(dbId) { if (isLiveUser() && dbId) sb.functions.invoke("notify", { body: { action: "event", event_id: dbId } }).catch(() => {}); }
+
+  /* ---------- the day on site, the Uber way: on the way → on site → packed up.
+     The crew tap it on the brief; the homeowner sees it like a driver card and gets an alert; the office sees every site on one Today card.
+     Live: site_events kind "day" (clients may read only these rows, only for their own job). ---------- */
+  const DAYST = { way: ["🚐", "On the way"], late: ["⏱️", "Running late"], site: ["👷", "On site"], done: ["🏁", "Packed up"] };
+  const todayAt = (hm) => { const d = new Date(); d.setHours(hm[0], hm[1], 0, 0); return d.toISOString(); };
+  const DEMO_DAY = [["duke", "Larry", "site", "", [6, 52]], ["duke", "Tim", "site", "", [6, 58]], ["brompton", "Brandon", "way", "7:25 am", [6, 55]], ["sunnyside", "Paul", "site", "", [7, 1]]];
+  const dayEta = (mins) => clockOf(new Date(Date.now() + mins * 60000).toISOString());
+  function dayEvents(jid) {
+    const own = (S.dayEv || []).filter((e) => e.job === jid && sinceToday(e.created));
+    const seed = isLiveUser() ? [] : DEMO_DAY.filter((x) => x[0] === jid && !own.some((e) => e.by === x[1])).map((x) => ({ id: "dd-" + x[0] + "-" + x[1], job: x[0], by: x[1], st: x[2], eta: x[3], at: clockOf(todayAt(x[4])), created: todayAt(x[4]), seed: true }));
+    return seed.concat(own).sort((a, b) => (a.created < b.created ? -1 : a.created > b.created ? 1 : 0));
+  }
+  /* where a site is up to today: each person's latest word; anyone on site makes the site "on site" */
+  function dayOf(jid) {
+    const ev = dayEvents(jid); if (!ev.length) return null;
+    const per = {};
+    ev.forEach((e) => { if (!DAYST[e.st]) return; const p = per[e.by] = per[e.by] || { by: e.by, eta: "", late: false }; p.st = e.st === "late" ? "way" : e.st; p.at = e.at; p.created = e.created;
+      if (e.st === "way") { p.eta = e.eta; p.late = false; } if (e.st === "late") { p.eta = e.eta; p.late = true; } if (e.st === "site") p.siteAt = p.siteAt || e.at; if (e.st === "done") p.doneAt = e.at; });
+    const ppl = Object.keys(per).map((k) => per[k]).sort((a, b) => (a.created < b.created ? -1 : a.created > b.created ? 1 : 0)); // oldest update first, latest last
+    if (!ppl.length) return null;
+    const on = ppl.filter((p) => p.st === "site"), way = ppl.filter((p) => p.st === "way"), done = ppl.filter((p) => p.st === "done");
+    return { st: on.length ? "site" : way.length ? "way" : "done", on: on, way: way, done: done, ppl: ppl };
+  }
+  /* the job "today" means: the one I've already sent an update for today, else today's saved plan, else today's brief.
+     (Once tomorrow's plan goes out, the brief and memberships move to tomorrow's job; today's run must not follow them.) */
+  function todayJob() {
+    const pick = (id) => (id ? (S.published || []).find((x) => x.id === id) || (S.jobs || []).find((x) => x.id === id) || null : null);
+    const mine = (S.dayEv || []).filter((e) => e.mine && sinceToday(e.created));
+    if (mine.length) { const j = pick(mine[mine.length - 1].job); if (j) return j; }
+    if (isLiveUser() && S.todayPlan && S.todayPlan.length && S.user) { const row = S.todayPlan.find((p) => (p.crew || []).indexOf(S.user.uid) > -1); return row ? pick(row.job_id) : null; }
+    return briefFor("tue");
+  }
+  function myDay(jid) { const ev = dayEvents(jid).filter((e) => e.mine); return ev.length ? ev[ev.length - 1] : null; }
+  const daySteps = (n) => '<div class="tsteps" aria-hidden="true">' + [1, 2, 3].map((k) => '<i' + (k <= n ? ' class="on"' : "") + '></i>').join("") + '</div>' +
+    '<div class="tlbl" aria-hidden="true">' + ["On the way", "On site", "Packed up"].map((l, i) => '<span' + (i + 1 === n ? ' class="on"' : "") + '>' + l + '</span>').join("") + '</div>';
+  function daySend(jid, st, mins) {
+    const eta = mins ? dayEta(mins) : ""; const now = new Date().toISOString();
+    const ev = { id: "d" + Date.now(), job: jid, by: isLiveUser() ? (S.user.name || ME) : ME, st: st, eta: eta, at: clockOf(now), created: now, mine: true };
+    S.dayEv = (S.dayEv || []).filter((e) => sinceToday(e.created)).concat([ev]);
+    if (isLiveUser()) sb.from("site_events").insert({ job_id: jid, kind: "day", status: "done", data: { st: st, eta: eta, mins: mins || 0 }, by: S.user.uid }).select().single().then((r) => {
+      if (r.error) { S.dayEv = (S.dayEv || []).filter((x) => x !== ev); toast("Not sent: " + r.error.message); render(); return; }
+      ev.dbId = r.data.id; sb.functions.invoke("notify", { body: { action: "day", event_id: r.data.id } }).catch(() => {});
+    });
+    toast({ way: "🚐 Sent · arriving about " + eta, late: "⏱️ Updated · now about " + eta, site: "👋 Marked on site at " + clockOf(now), done: "🏁 Packed up at " + clockOf(now) + ". Thanks team." }[st]);
+  }
+  /* crew: the next step as one big button, like the Uber driver app */
+  function dayCard(j, away) {
+    const m = myDay(j.id); const st = m ? m.st : ""; const d = dayOf(j.id);
+    const n = st === "done" ? 3 : st === "site" ? 2 : st ? 1 : 0;
+    const others = d ? d.ppl.filter((p) => !(m && p.by === m.by)) : [];
+    const team = others.length ? '<span class="xs muted">' + others.map((p) => esc(p.by) + " " + (p.st === "way" ? (p.late ? "running late" : "on the way") + (p.eta ? ", about " + esc(p.eta) : "") : p.st === "site" ? "on site since " + esc(p.siteAt || p.at) : "packed up " + esc(p.doneAt || p.at))).join(" · ") + '</span>' : "";
+    const k = (act, arg, cls, label) => '<button type="button" class="btn ' + cls + '" data-act="' + act + '" data-arg="' + arg + ':' + esc(j.id) + '">' + label + '</button>';
+    let head, sub, btns;
+    if (!st) { head = "Heading to " + esc(j.short) + "?"; sub = "Tap when you leave. The homeowner and 🏢 Prime Office get your arrival time."; btns = k("daysheet", "omw", "btn-primary", "🚐 On my way") + k("dayst", "site", "btn-outline", "I’m already here"); }
+    else if (st === "way" || st === "late") { head = (st === "late" ? "Running late · now about " : "On your way · arriving about ") + esc(m.eta); sub = "Sent at " + esc(m.at) + ". Tap I’m here when you pull up."; btns = k("dayst", "site", "btn-primary", "👋 I’m here") + k("daysheet", "late", "btn-outline", "⏱️ Running late"); }
+    else if (st === "site") { head = "On site since " + esc((d && (d.on.find((p) => p.by === m.by) || {}).siteAt) || m.at); sub = "When you finish, do the close-up checklist, then tap Packed up."; btns = k("dayst", "done", "btn-outline", "🏁 Packed up for today"); }
+    else { head = "Packed up at " + esc(m.at); sub = "Sent to 🏢 Prime Office and the homeowner’s app."; btns = k("dayst", "site", "btn-text btn-sm", "Back on site"); }
+    return '<article class="card pad trip" aria-live="polite"><div class="between"><span class="lbl">Today’s run' + (away ? " · " + esc(j.short) : "") + '</span>' + (st ? '<span class="chip ' + (st === "done" ? "ok" : st === "late" ? "warn" : "canary") + '">' + DAYST[st][0] + " " + DAYST[st][1] + '</span>' : "") + '</div>' +
+      '<b class="dhead">' + head + '</b>' + daySteps(n) + '<span class="sm muted">' + sub + '</span>' + team + '<div class="btnrow">' + btns + '</div></article>';
+  }
+  /* client: the driver card. Nothing to show yet → say what will happen, on weekdays while the job is running */
+  function clientToday(j) {
+    const d = dayOf(j.id); const rain = clientRain(j);
+    if (!d) {
+      const i = isLiveUser() ? pinfo(j.id) : { prog: 55 }; const prog = i.prog == null || i.prog === "" ? null : Number(i.prog); const wd = new Date().getDay();
+      if (prog == null || prog >= 100 || wd === 0 || wd === 6) return rain;
+      return '<div class="card pad row mid ctoday quiet"><span class="tile" aria-hidden="true">🔔</span><span class="col grow"><b>Crew updates show here</b><span class="sm muted">When the crew are on the way you’ll get a heads-up with their arrival time, then again when they pack up.</span></span></div>' + rain;
+    }
+    const n = d.st === "done" ? 3 : d.st === "site" ? 2 : 1;
+    let ic, t, s, extra = "";
+    if (d.st === "way") { const p = d.way[d.way.length - 1]; ic = p.late ? "⏱️" : "🚐"; t = (d.way.length > 1 ? esc(names(d.way.map((x) => x.by))) + " are" : esc(p.by) + " is") + " on the way"; s = (p.late ? "Running a little late · now about " : "Arriving about ") + esc(p.eta); }
+    else if (d.st === "site") { ic = "👷"; t = "The crew are on site"; s = d.on.map((x) => esc(x.by) + " since " + esc(x.siteAt || x.at)).join(" · ") + (d.way.length ? " · " + esc(names(d.way.map((x) => x.by))) + " on the way" : ""); }
+    else { const last = d.done[d.done.length - 1] || { at: "" }; ic = "🏁"; t = "Packed up for today"; s = "Finished at " + esc(last.doneAt || last.at) + ". Today’s photos and notes land in Updates."; extra = '<button type="button" class="btn btn-outline btn-sm" data-act="pv" data-arg="upd">See today’s updates</button>'; }
+    const late = d.st === "way" && d.way[d.way.length - 1].late;
+    return '<article class="card pad ctoday" aria-live="polite"><div class="between"><span class="lbl">Today at your place</span><span class="chip ' + (d.st === "done" ? "ok" : late ? "warn" : "canary") + '">' + (late ? "Running late" : DAYST[d.st][1]) + '</span></div>' +
+      '<div class="row mid" style="gap:12px"><span class="tile" aria-hidden="true">' + ic + '</span><span class="col grow"><b class="dhead">' + t + '</b><span class="sm muted">' + s + '</span></span></div>' + daySteps(n) + extra + '</article>' + rain;
+  }
+  /* client: rain heads-up before they have to ask (today first, else tomorrow) */
+  function clientRain(j) {
+    if (isLiveUser()) { const i = pinfo(j.id); if (i.prog != null && i.prog !== "" && Number(i.prog) >= 100) return ""; }
+    const td = wxOf(j, "tue"), tm = isLiveUser() ? wxOf(j, "wed") : null;
+    const w = wetDay(td) ? [td, "today"] : wetDay(tm) ? [tm, "tomorrow"] : null; if (!w) return "";
+    return '<div class="callout warn"><span aria-hidden="true">🌧️</span><span><b>Rain is forecast ' + w[1] + ' (' + esc(w[0].rain) + ').</b> Outside painting may pause; inside work carries on. Andy will message you if the plan changes.</span></div>';
+  }
+  /* office: every site's day on one card, like the Airbnb host Today tab */
+  function officeToday() {
+    const evIds = (S.dayEv || []).filter((e) => sinceToday(e.created)).map((e) => e.job);
+    const ids = Array.from(new Set((isLiveUser() ? [] : Object.keys(TODAY_CREW).concat(DEMO_DAY.map((x) => x[0]))).concat(evIds)));
+    const rows = ids.map((id) => {
+      const d = dayOf(id); const crew = !isLiveUser() && TODAY_CREW[id] ? TODAY_CREW[id] : [];
+      const heard = d ? d.ppl.map((p) => p.by) : []; const quiet = crew.filter((x) => heard.indexOf(x) < 0);
+      let ic, t;
+      if (!d) { ic = "⏳"; t = "Not heard from yet" + (crew.length ? " · " + esc(names(crew)) : ""); }
+      else if (d.st === "site") { ic = "👷"; t = "On site · " + d.on.map((p) => esc(p.by) + " " + esc(p.siteAt || p.at)).join(", ") + (d.way.length ? " · " + d.way.map((p) => esc(p.by) + (p.late ? " running late, now " : " due ") + esc(p.eta)).join(", ") : ""); }
+      else if (d.st === "way") { ic = d.way.some((p) => p.late) ? "⏱️" : "🚐"; t = d.way.map((p) => esc(p.by) + (p.late ? " running late, now about " : " on the way, due about ") + esc(p.eta)).join(" · "); }
+      else { ic = "🏁"; t = "Packed up · " + d.done.map((p) => esc(p.by) + " " + esc(p.doneAt || p.at)).join(", "); }
+      if (d && quiet.length) t += " · not heard from " + esc(names(quiet));
+      return { st: d ? (d.st === "way" && d.way.some((p) => p.late) ? "late" : d.st) : "none", h: '<div class="prow"><span class="tile sm' + (!d ? " warn" : "") + '" aria-hidden="true">' + ic + '</span><span class="col grow"><span>' + esc(jobShort(id)) + '</span><span class="sm muted">' + t + '</span></span></div>' };
+    });
+    const c = (k) => rows.filter((r) => r.st === k).length;
+    const sum = [c("site") ? c("site") + " on site" : "", c("way") ? c("way") + " on the way" : "", c("late") ? c("late") + " running late" : "", c("done") ? c("done") + " packed up" : "", c("none") ? c("none") + " not heard from" : ""].filter(Boolean).join(" · ");
+    return '<div class="card list otoday"><div class="panel-head between"><h2>🚐 Today on site</h2>' + (rows.length ? '<span class="chip' + (c("late") ? " warn" : "") + '">' + sum + '</span>' : "") + '</div>' +
+      (rows.length ? rows.map((r) => r.h).join("") : '<div class="prow"><span class="col grow sm muted">Nobody’s on the way yet today. When the crew tap On my way on their brief it shows here, and the homeowner gets a heads-up.</span></div>') + '</div>';
+  }
+  /* quick replies: one tap fills the message box (Uber One-Click Chat, Airbnb saved replies) */
+  const QR = {
+    crew: ["👍 Got it", "🪣 Running low on paint", "🌧️ Raining here, stopping outside work", "📞 Can you call me?", "🔑 Can’t get in, no one’s home"],
+    office: ["👍 Got it, thanks", "✅ Ordered, ready after 2 pm", "📞 Calling you now", "📸 Can you send me a photo?"],
+    officeClient: ["📞 Thanks, I’ll call you shortly", "👍 All booked in", "💳 The invoice is in your portal", "📸 Today’s photos are in Updates"],
+    client: ["👍 Thanks!", "📞 Can someone call me?", "🔓 Gate’s unlocked for you", "🐶 The dog’s inside today"]
+  };
+  const qrRow = (k, act) => '<div class="qr" role="group" aria-label="Quick replies">' + QR[k].map((t) => '<button type="button" class="opt" data-act="' + act + '" data-arg="' + esc(t) + '">' + esc(t) + '</button>').join("") + '</div>';
+  /* the trade account shown at the paint counter */
+  const TRADE_ACCT = ["Prime Painting", "Painter Network Group Pty Ltd"];
+  /* how long a request has been waiting (Uber Eats merchant queue) */
+  function waitChip(p) {
+    if (!p.created || p.status !== "new") return "";
+    const mins = Math.max(0, Math.round((Date.now() - Date.parse(p.created)) / 60000)); if (isNaN(mins)) return "";
+    const l = mins < 1 ? "just now" : mins < 60 ? mins + " min" : Math.floor(mins / 60) + " h " + (mins % 60) + " min";
+    return '<span class="chip ' + (mins >= 30 ? "stop" : mins >= 10 ? "warn" : "") + '" style="align-self:flex-start">⏳ Waiting ' + l + '</span>';
+  }
+  /* the last paint this person asked for on this site, for Order again (demo: the sample Fri 30 Oct request) */
+  function lastPaint(jid) {
+    const mine = S.paint.filter((p) => p.job === jid && (p.mine || (!isLiveUser() && p.by === ME)));
+    if (mine.length) { const p = mine[mine.length - 1]; return { at: p.at, items: paintItems(p) }; }
+    if (isLiveUser()) return null;
+    const j = jobById(jid); const c = j && (j.colours || []).find((x) => /natural white/i.test(x.n) && !x.tbc);
+    return c ? { at: "Fri 30 Oct", items: [Object.assign({}, c, { qty: 2 })] } : null;
+  }
   function webPushBoot() {
     if (!LIVE || CAP || !webPushOK() || location.protocol !== "https:") return;
     navigator.serviceWorker.register("sw.js").then((reg) => reg.pushManager.getSubscription()).then((sub) => { U.pushOn = !!sub; }).catch(() => {});
     navigator.serviceWorker.addEventListener("message", (e) => { if (e.data && e.data.prime === "open") openFromAlert(e.data.url || ""); });
   }
   // a tapped alert carries ?pv=<order id>: open that order once the data is in
-  function openFromAlert(url, quiet) { const m = String(url || "").match(/[?&]pv=([\w-]+)/); if (m) { U.pendingPv = m[1]; if (!quiet) render(); } }
+  function openFromAlert(url, quiet) {
+    const m = String(url || "").match(/[?&]pv=([\w-]+)/); if (m) { U.pendingPv = m[1]; if (!quiet) render(); return; }
+    // day alerts open a screen ("#client-progress", "#office-plan"), only one that belongs to this person's role
+    const h = String(url || "").match(/#([\w-]+)$/);
+    try { if (h && VIEWS[h[1]] && S.role && modeOf(h[1]) === S.role && location.hash !== "#" + h[1]) location.hash = h[1]; } catch (e) { /* not booted yet */ }
+  }
   function openPending() {
     const id = U.pendingPv; if (!id || (LIVE && S.user && S.user.live && !LIVE_READY)) return;
     U.pendingPv = null;
@@ -1904,7 +2103,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   function paintCard(p) {
     return '<article class="card ibx hot"><div class="ibh"><span class="tile stop" aria-hidden="true">🪣</span><span class="col grow"><b>Out of paint · ' + esc(jobShort(p.job)) + '</b><span class="sm muted">' + esc(p.by) + ' · ' + esc(p.at) + '</span></span><span class="chip stop">' + (p.urg === "out" ? "Work stopped" : "Running low") + '</span></div>' +
       '<div class="pills">' + p.cols.map((c) => '<span class="pill">' + esc(paintLine(c)) + (c.p ? " · " + esc(c.p) : "") + '</span>').join("") + '</div>' +
-      ((p.rem || []).length ? '<span class="chip warn" style="align-self:flex-start">' + remText(p) + '</span>' : "") +
+      waitChip(p) + ((p.rem || []).length ? '<span class="chip warn" style="align-self:flex-start">' + remText(p) + '</span>' : "") +
       '<span class="sm muted">' + esc(p.by) + ' sees “Order pending” until you confirm it.</span>' +
       '<div class="btnrow"><button type="button" class="btn btn-primary btn-sm" data-act="pord" data-arg="' + p.id + '">✅ I’ve ordered it</button><button type="button" class="btn btn-outline btn-sm" data-act="pview" data-arg="' + p.id + '">View</button><button type="button" class="btn btn-outline btn-sm" data-act="chatfor" data-arg="' + p.job + '">💬 Reply</button></div></article>';
   }
@@ -2408,7 +2607,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       S.role === "client" ? Promise.resolve({ data: [] }) : sb.from("brief_confirms").select("*"),
       sb.from("variations").select("*").order("created_at", { ascending: true }).limit(300),
       S.role === "office" || S.role === "client" ? sb.from("variation_prices").select("*") : Promise.resolve({ data: [] }),
-      S.role === "client" ? Promise.resolve({ data: [] }) : sb.from("site_events").select("*").order("created_at", { ascending: true }).limit(400)];
+      S.role === "client" ? sb.from("site_events").select("*").eq("kind", "day").gte("created_at", new Date(new Date().setHours(0, 0, 0, 0)).toISOString()).limit(100) : sb.from("site_events").select("*").or('kind.not.in.(day,prestart),created_at.gte."' + new Date(new Date().setHours(0, 0, 0, 0)).toISOString() + '"').order("created_at", { ascending: false }).limit(600)];
     return Promise.all(q).then((res) => {
       const tasks = res[0].data || [], notes = res[1].data || [], reqs = res[2].data || [], resp = res[3].data || [];
       S.leads = (res[4] && res[4].data) || [];
@@ -2445,18 +2644,35 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const d = r.data || {}; const who = whoOf(r.by); const at = fmtAt(r.created_at); const mine = !!(S.user && r.by === S.user.uid);
     if (r.kind === "paint") return { kind: "paint", v: { id: "p" + r.id, dbId: r.id, job: r.job_id, by: who, cols: d.cols || [], urg: d.urg || "out", at: at.replace(/^Today /, ""), status: r.status === "open" ? "new" : (d.res || "pickup"), at2: d.at2 || "", order: d.order || null, rem: Array.isArray(d.reminders) ? d.reminders.slice() : [], raw: d, mine: mine, created: r.created_at } };
     if (r.kind === "eod") return { kind: "eod", v: { id: "e" + r.id, dbId: r.id, job: r.job_id, by: who, notes: d.notes || "", photos: d.photos || [], at: at, status: r.status, mine: mine, created: r.created_at } };
+    if (r.kind === "day") { // only the four known steps; the ETA is worked out in this phone's own time zone from the minutes
+      if (!DAYST[d.st]) return { kind: "none", v: null };
+      const mins = Number(d.mins) || 0; const eta = mins > 0 && mins <= 240 ? clockOf(new Date(Date.parse(r.created_at) + mins * 60000).toISOString()) : String(d.eta || "").slice(0, 12);
+      return { kind: "day", v: { id: "d" + r.id, dbId: r.id, job: r.job_id, by: who, st: d.st, eta: eta, at: clockOf(r.created_at), created: r.created_at, mine: mine } };
+    }
     if (r.kind === "prestart") return { kind: "prestart", v: { id: "ps" + r.id, dbId: r.id, job: r.job_id, by: who, at: d.at || clockOf(r.created_at), created: r.created_at, mine: mine } };
     const type = r.kind === "issue" ? "info" : r.kind;
     return { kind: "alert", v: { id: "a" + r.id, dbId: r.id, job: r.job_id, by: who, type: type, text: d.text || "", urg: d.urg || "today", builder: !!d.builder, builderTold: !!d.builderTold, at: at, status: r.status === "open" ? "new" : "seen", at2: d.at2 || "", imgKey: d.photo_path ? "ph:" + d.photo_path : null, rem: Array.isArray(d.reminders) ? d.reminders.slice() : [], raw: d, mine: mine, created: r.created_at } };
   }
   function applyEvents(rows) {
-    S.paint = []; S.alerts = []; S.eods = []; S.reportAt = ""; S.orderAt = ""; S.prestart = {};
-    rows.forEach((r) => { const e = evRow(r); if (e.kind === "paint") S.paint.push(e.v); else if (e.kind === "eod") S.eods.push(e.v); else if (e.kind === "prestart") { if (sinceToday(e.v.created)) (S.prestart[e.v.job] = S.prestart[e.v.job] || {})[e.v.by] = e.v.at; } else S.alerts.push(e.v); });
+    S.paint = []; S.alerts = []; S.eods = []; S.reportAt = ""; S.orderAt = ""; S.prestart = {}; S.dayEv = [];
+    rows = rows.slice().sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)));
+    rows.forEach((r) => { const e = evRow(r); if (e.kind === "paint") S.paint.push(e.v); else if (e.kind === "eod") S.eods.push(e.v); else if (e.kind === "day") { if (sinceToday(e.v.created)) S.dayEv.push(e.v); } else if (e.kind === "none") { /* unknown row, skip */ } else if (e.kind === "prestart") { if (sinceToday(e.v.created)) (S.prestart[e.v.job] = S.prestart[e.v.job] || {})[e.v.by] = e.v.at; } else S.alerts.push(e.v); });
     S.eods.forEach((e) => { if (e.mine && sinceToday(e.created)) S.reportAt = clockOf(e.created); });
     S.alerts.forEach((a) => { if (a.mine && a.type === "order" && sinceToday(a.created)) S.orderAt = clockOf(a.created); });
   }
   function applyEvent(row) {
     const e = evRow(row);
+    if (e.kind === "none") return false;
+    if (e.kind === "day") {
+      if (!sinceToday(e.v.created)) return false;
+      S.dayEv = S.dayEv || [];
+      const i = S.dayEv.findIndex((x) => x.dbId === row.id || (!x.dbId && x.mine && e.v.mine && x.job === e.v.job && x.st === e.v.st));
+      if (i > -1) { S.dayEv[i] = e.v; return true; }
+      S.dayEv.push(e.v);
+      if (!e.v.mine && S.role === "client") toast({ way: "🚐 " + e.v.by + " is on the way · about " + e.v.eta, late: "⏱️ " + e.v.by + " is running late · now about " + e.v.eta, site: "👷 " + e.v.by + " is on site", done: "🏁 The crew have packed up for today" }[e.v.st] || "Crew update");
+      if (!e.v.mine && S.role === "office" && e.v.st === "late") { S.notifSeen = false; toast("⏱️ " + e.v.by + " running late · " + jobShort(row.job_id) + " · now about " + e.v.eta); }
+      return true;
+    }
     if (e.kind === "prestart") { if (sinceToday(e.v.created)) (S.prestart[e.v.job] = S.prestart[e.v.job] || {})[e.v.by] = e.v.at; return true; }
     const list = e.kind === "paint" ? S.paint : e.kind === "eod" ? (S.eods = S.eods || []) : S.alerts;
     const i = list.findIndex((x) => x.dbId === row.id); const fresh = i < 0;
@@ -2494,6 +2710,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     return sb.from("plans").select("*").then((r) => {
       if (!r || r.error || planTimer) return; const rows = r.data || [];
       const byDay = {}; rows.forEach((p) => { (byDay[p.day] = byDay[p.day] || []).push(p); });
+      S.todayPlan = byDay[isoToday(0)] || null;
       const nm = (ids) => (ids || []).map((u) => UID2NAME[u] || (S.user && u === S.user.uid ? S.user.name : null)).filter(Boolean);
       if (S.role === "office") {
         const d1 = byDay[planDate("wed")];
@@ -2589,7 +2806,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   /* one account per phone at a time: the next person to sign in must never see the last one's chats, jobs or people */
   function wipeLive() {
     S.chats = {}; S.cSeen = {}; S.jobs = []; S.published = []; S.tasks = []; S.siteNotes = []; S.leads = []; S.avail = {}; S.availResp = {}; S.paint = []; S.alerts = []; S.variations = []; S.prestart = {}; S.pinfo = {};
-    S.eods = []; S.confVer = {}; S.confAt = {}; S.confJob = {}; S.plans = { thu: null, fri: null }; S.pubVer = 0; S.sentAt = ""; S.reportAt = ""; S.orderAt = ""; S.dirty = false; S.blocks = [];
+    S.eods = []; S.dayEv = []; S.todayPlan = null; S.confVer = {}; S.confAt = {}; S.confJob = {}; S.plans = { thu: null, fri: null }; S.pubVer = 0; S.sentAt = ""; S.reportAt = ""; S.orderAt = ""; S.dirty = false; S.blocks = [];
     Object.keys(PJ).forEach((k) => { delete PJ[k]; }); Object.keys(PUBV).forEach((k) => { delete PUBV[k]; }); Object.keys(VPRICE).forEach((k) => { delete VPRICE[k]; }); clearTimeout(planTimer); planTimer = null;
     U.people = null; U.noteImgs = {}; U.taskImgs = {}; U.chatJob = null; U.chatDraft = ""; U.chatImg = null; U.cDraft = ""; U.pv = "over";
     SNAP.tasks = {}; SNAP.notes = {}; LIVE_READY = false; LIVE_IDS = null; clearTimeout(syncTimer); clearTimeout(resubTimer); dropChan(); save();
@@ -2742,11 +2959,15 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       const confirmBox = '<div class="confirm">' + (conf ? '<div class="confirmed">' + CKSVG + '<span>You confirmed at ' + esc(S.confAt[ME]) + '. The office can see it.</span></div>' : '<button type="button" class="btn btn-primary" style="width:100%;box-shadow:var(--shadow)" data-act="confirm">Got it 👍</button>') + '</div>';
       body = isTomorrow
         ? hero + paintStatus(j) + facts + tools + colours + nearCarousel(j) + onSite + '<p class="sub center">Thanks team, have a great day 👍🏼</p>' + confirmBox
-        : hero + paintStatus(j) + onSite + facts + tools + colours + nearCarousel(j);
+        : hero + ((tj) => tj ? dayCard(tj, tj.id !== j.id) : "")(todayJob()) + paintStatus(j) + onSite + facts + tools + colours + nearCarousel(j);
       if (isTomorrow && !conf && S.confAt[ME]) body = '<div class="callout warn"><span aria-hidden="true">🔄</span><span>The office updated this brief at ' + esc(S.sentAt) + '. Check the changes, then confirm again.</span></div>' + body;
     }
     const subNote = isSub() ? '<div class="callout"><span aria-hidden="true">🤝</span><span><b>Subcontractor view.</b> Just your sites, tasks and chat. You invoice Prime as usual, so there are no timesheets.</span></div>' : "";
-    return '<section class="view">' + crewHeader() + subNote + availCard() + strip + body + '</section>';
+    // looking at another day during work hours: today's run stays on top, so On my way is never a tap away
+    const hr = new Date().getHours(); const tj = S.day !== "tue" && hr >= 5 && hr < 17 ? todayJob() : null;
+    const tb = tj ? blockFor(dayIsoOf("tue"), tj.id) : null; const tm = tj ? myDay(tj.id) : null;
+    const away = tj && !(tb && tb.kind !== "supplier") && !(tm && tm.st === "done") ? dayCard(tj, true) : "";
+    return '<section class="view">' + crewHeader() + subNote + availCard() + away + strip + body + '</section>';
   }
 
   function crewJob() {
@@ -2928,7 +3149,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       '<div class="board-head"><div class="col" style="gap:12px"><div class="col"><h1>' + (isWed ? "Tomorrow’s plan" : dl[2] + "’s plan") + '</h1><span class="sub">' + dl[1] + (planned ? ' · ' + ros.length + ' crew across ' + jobs.length + (jobs.length === 1 ? ' site' : ' sites') : "") + '</span></div>' + days + '</div>' +
         '<div class="legend">' + (isWed ? '<span><i class="yes"></i>Confirmed</span><span><i></i>Waiting</span>' : "") + '<span>Drag or tap a name to move them</span><button type="button" class="btn btn-outline btn-sm" data-act="blockday">🌧️ Block ' + (isWed ? "tomorrow" : dl[2]) + '</button></div></div>' +
       officeKpis() + blockBar +
-      '<article class="hero" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px">' + banner + '</article>' + officeInbox() +
+      '<article class="hero" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px">' + banner + '</article>' + officeToday() + officeInbox() +
       (planned ? stFilterBar(jobs, day, stf, "plan") : "") +
       (planned ? '<div class="jobs">' + (shown.length ? shown.map(card).join("") : stEmpty(stf, "sites " + (isWed ? "tomorrow" : dl[2]), "plan")) +
         '<article class="card job" data-dropjob="none"><div class="col"><h2>Not rostered ' + (isWed ? "tomorrow" : dl[2]) + '</h2><span class="sm muted">Drag a name here, or tap one to put them on a site</span></div>' +
@@ -3036,7 +3257,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         ((i.start || i.due) ? '<div class="cdates">' + (i.start ? '<div><span class="om sm">' + (prog ? "Started" : "Starting") + '</span><b>' + esc(dfmt(i.start)) + '</b></div>' : "") + (i.due ? '<div><span class="om sm">Finishing</span><b>' + esc(dfmt(i.due)) + '</b></div>' : "") + '</div>' : "") +
         '</article>' + (done ? '<div class="card row mid"><span class="tile" aria-hidden="true">🎉</span><span class="col grow"><b>Thanks for having us</b><span class="sm muted">Another room, the exterior, or a friend’s place: a quote takes two minutes.</span></span></div>' : "") + clientActions(j, i.start, i.due);
       const crew = (j.crew || []).length ? '<div class="stack"><h2>On site</h2><div class="card list"><div class="cvisit"><span class="dtile now word"><span>Next</span><b>Site</b></span><span class="col grow"><b>Crew on site from ' + esc(j.start) + '</b><span class="sm muted">' + esc(names(j.crew)) + (j.goal ? ' · ' + esc(j.goal) : "") + '</span></span></div></div></div>' : "";
-      return '<div class="hubpane stack">' + needCardOf(cNeeds()) + hero + crew + clientChecklist() + clientNotes() +
+      return '<div class="hubpane stack">' + needCardOf(cNeeds()) + clientToday(j) + hero + crew + clientChecklist() + clientNotes() +
         '<div class="stack"><h2>Your team</h2><div class="card list"><div class="cmember"><span class="cav" aria-hidden="true">A</span><span class="col grow"><b>Andy</b><span class="sm muted">Owner, Prime Painting · dates, prices and changes</span><span class="cbtns"><a class="btn btn-outline btn-sm" href="tel:' + OFFICE_TEL + '">Call</a><a class="btn btn-outline btn-sm" href="sms:' + OFFICE_TEL + '">Text</a><button type="button" class="btn btn-outline btn-sm" data-act="pv" data-arg="upd">Message</button></span></span></div></div><p class="sub center">Mon to Fri, 7 am to 4 pm. Most messages answered within a few hours.</p></div></div>';
     }
     const need = cNeeds();
@@ -3067,7 +3288,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       : '<div class="step done"><span class="rail"><span class="tl" style="visibility:hidden"></span><span class="dotc">' + IC.tick + '</span><span class="bl"></span></span><span class="txt"><button type="button" class="cmore" data-act="jall" aria-expanded="false">' + doneN + ' stages done since 8 Oct · show them</button></span></div>';
     const visit = (top, big, cls, title, sub, btns) => '<div class="cvisit"><span class="dtile ' + cls + '"><span>' + top + '</span><b>' + big + '</b></span><span class="col grow"><b>' + title + '</b><span class="sm muted">' + sub + '</span>' + (btns ? '<span class="cbtns">' + btns + '</span>' : "") + '</span></div>';
     const member = (n, cls, what, btns) => '<div class="cmember"><span class="cav ' + cls + '" aria-hidden="true">' + ini(n) + '</span><span class="col grow"><b>' + n + '</b><span class="sm muted">' + esc(ROLEOF[n]) + ' · ' + what + '</span><span class="cbtns">' + btns + '</span></span></div>';
-    return '<div class="hubpane stack">' + needCard +
+    return '<div class="hubpane stack">' + needCard + clientToday(j) +
       '<article class="hero" style="gap:12px"><div class="between"><span class="bignum"><span data-count="55" data-suf="%">55%</span> <span class="om" style="font-size:15px;font-weight:500;letter-spacing:0">complete</span></span><span class="chip canary">On track</span></div>' +
         '<span class="bar"><i style="width:55%"></i></span>' +
         '<div class="cdates"><div><span class="om sm">Started</span><b>Mon 19 Oct</b></div><div><span class="om sm">Finishing</span><b>Fri 13 Nov</b></div></div>' +
@@ -3127,7 +3348,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       const fi = (m) => { const mine = m.uid === S.user.uid; return '<div class="fi' + (mine ? " mine" : "") + '"><span class="cav' + (mine ? "" : " alt") + '" aria-hidden="true">' + ini(m.by) + '</span><span class="body"><span class="xs muted">' + esc(mine ? "You" : m.by) + " · " + esc(m.at) + '</span><span class="bub">' + esc(m.text) + '</span>' +
         (m.imgKey && U.noteImgs[m.imgKey] ? '<div class="photos three"><img src="' + U.noteImgs[m.imgKey] + '" alt="Photo"></div>' : "") + '</span></div>'; };
       return '<div class="hubpane stack">' +
-        '<div class="card pad ccompose"><b>Message the Prime team</b><textarea id="c-msg" rows="2" data-in="cdraft" placeholder="Ask a question or let us know something" aria-label="Message to the Prime team">' + esc(U.cDraft) + '</textarea>' +
+        '<div class="card pad ccompose"><b>Message the Prime team</b><textarea id="c-msg" rows="2" data-in="cdraft" placeholder="Ask a question or let us know something" aria-label="Message to the Prime team">' + esc(U.cDraft) + '</textarea>' + qrRow("client", "cqr") +
           '<button type="button" class="btn btn-primary" data-act="csend">Send</button></div>' +
         '<div class="card cfeed">' + (list.length ? list.map(fi).join("") : '<div class="prow sm muted">No messages yet. Anything you send here goes straight to Andy.</div>') + '</div></div>';
     }
@@ -3135,7 +3356,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const fi = (by, text, imgs, at) => '<div class="fi' + (by === "You" ? " mine" : "") + '"><span class="cav' + (by === "Brandon" ? " alt" : "") + '" aria-hidden="true">' + (by === "You" ? "R" : ini(by)) + '</span><span class="body"><span class="xs muted">' + esc(by) + (at ? " · " + esc(at) : "") + '</span><span class="bub">' + esc(text) + '</span>' +
       (imgs && imgs.length ? '<div class="photos three">' + imgs.map((k, i) => '<img src="' + IMG[k] + '" alt="Update photo ' + (i + 1) + '" loading="lazy">').join("") + '</div>' : "") + '</span></div>';
     return '<div class="hubpane stack">' +
-      '<div class="card pad ccompose"><b>Message Andy and Brandon</b><textarea id="c-msg" rows="2" data-in="cdraft" placeholder="Ask a question or let us know something" aria-label="Message to the Prime team">' + esc(U.cDraft) + '</textarea>' +
+      '<div class="card pad ccompose"><b>Message Andy and Brandon</b><textarea id="c-msg" rows="2" data-in="cdraft" placeholder="Ask a question or let us know something" aria-label="Message to the Prime team">' + esc(U.cDraft) + '</textarea>' + qrRow("client", "cqr") +
         '<button type="button" class="btn btn-primary" data-act="csend">Send</button></div>' +
       '<div class="card cfeed">' +
         (mine.length ? '<div class="cday">Today</div>' + mine.map((m) => fi("You", m.text, null, m.at.replace("Today ", ""))).join("") : "") +
@@ -3514,9 +3735,30 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         '<div class="stack"><h2>What’s on the order</h2>' + list + '</div>' +
         (o.note ? '<div class="callout"><span aria-hidden="true">📝</span><span><b>From the office:</b> ' + esc(o.note) + '</span></div>' : "") +
         storeCard +
+        (!pending && p.status !== "deliver" && S.role !== "office" ? '<button type="button" class="btn btn-primary" data-act="sheet" data-arg="counter">🧾 Show at the counter</button>' : "") +
         (pending && S.role === "office" ? '<button type="button" class="btn btn-primary" data-act="pord" data-arg="' + p.id + '">✅ I’ve ordered it</button>' : "") +
         (pending && S.role !== "office" ? '<p class="sub center">You’ll get an alert the moment the office orders it.</p>' : "") +
         (!pending && S.role !== "office" && p.by === ME && !(S.pgot || {})[p.id] ? '<button type="button" class="btn btn-outline" data-act="pgot" data-arg="' + p.id + '">' + (p.status === "deliver" ? "✓ It’s arrived" : "✓ I’ve picked it up") + '</button>' : ""));
+    }
+    if (s === "omw" || s === "late") {
+      const j = jobById(U.dayJob); const late = s === "late";
+      const opt = (m) => '<button type="button" class="line" data-act="' + (late ? "daylate" : "dayomw") + '" data-arg="' + m + '"><span class="tile sm" aria-hidden="true">' + (late ? "⏱️" : "🚐") + '</span><span class="col grow"><b>' + m + ' min</b><span class="sm muted">Arriving about ' + dayEta(m) + '</span></span><span class="chip">Send</span></button>';
+      return sheetWrap(late ? "⏱️ Running late" : "🚐 On my way",
+        '<p class="sub">' + (late ? "How far away are you now?" : "How long until you get to " + esc(j ? j.short : "site") + "?") + '</p>' +
+        '<div class="card list">' + [10, 20, 30, 45, 60].map(opt).join("") + '</div>' +
+        '<p class="sub center">The homeowner and 🏢 Prime Office get your arrival time straight away.</p>');
+    }
+    if (s === "counter") {
+      const p = S.paint.find((x) => x.id === U.pview);
+      if (!p) return sheetWrap("🧾 At the counter", '<p class="sub">This order isn’t here any more.</p>');
+      const o = p.order || {}; const st = paintStore(p); const items = paintItems(p);
+      return sheetWrap("🧾 Show this at the counter",
+        '<div class="cnt"><span class="k">Trade account</span><span class="acct">' + esc(TRADE_ACCT[0]) + '</span><span class="xs">' + esc(TRADE_ACCT[1]) + '</span>' +
+          '<span class="k" style="margin-top:8px">Order number</span><span class="big' + (o.ref ? "" : " none") + '">' + esc(o.ref || "Ask by the account name") + '</span>' +
+          '<span class="k">For ' + esc(jobShort(p.job)) + (st && st.short ? ' · ' + esc(st.short) : "") + '</span>' +
+          '<div class="its">' + items.map((c) => '<div class="it"><span>' + esc(c.n) + (c.sz ? ' · ' + esc(c.sz) : "") + '</span><b>' + esc(String(c.qty || 1)) + '×</b></div>').join("") + (o.extra ? '<div class="it"><span>' + esc(o.extra) + '</span><b></b></div>' : "") + '</div></div>' +
+        (o.note ? '<div class="callout"><span aria-hidden="true">📝</span><span><b>From the office:</b> ' + esc(o.note) + '</span></div>' : "") +
+        '<button type="button" class="btn btn-outline" data-act="pview" data-arg="' + p.id + '">Back to the order</button>');
     }
     if (s === "a2hs") {
       return sheetWrap("🔔 Turn on alerts on iPhone",
@@ -3564,6 +3806,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           return '<div class="pqty"><span class="col"><b>' + esc(c.n) + '</b><span class="sm muted">' + esc(c.sz ? c.sz + " tins" : "Tins") + '</span></span><span class="stepper"><button type="button" aria-label="One less ' + esc(c.n) + '" data-act="oopqty" data-arg="' + i + ':-1">−</button><b>' + q + '</b><button type="button" class="plus" aria-label="One more ' + esc(c.n) + '" data-act="oopqty" data-arg="' + i + ':1">+</button></span></div>'; }).join("") + '</div></div>' : "";
       return sheetWrap("🪣 Out of paint",
         '<p class="sub">Tap what you’re out of at ' + esc(j.short) + '. Prime Office gets an alert straight away.</p>' +
+        ((lp) => lp && lp.items.length ? '<button type="button" class="line again" data-act="oopagain"><span class="tile sm" aria-hidden="true">↻</span><span class="col grow"><b>Order again</b><span class="sm muted">' + esc(lp.items.map(paintLine).join(", ")) + ' · last time, ' + esc(lp.at) + '</span></span><span class="chip">Use</span></button>' : "")(lastPaint(d.job)) +
         (cols.length ? '<div class="card list">' + cols.map((x) => { const c = x[0], i = x[1], on = !!d.sel[i];
             return '<button type="button" class="line selrow" data-act="oopsel" data-arg="' + i + '" ' + press(on) + '>' + tin(c, 46) + '<span class="col grow"><b>' + esc(c.n) + '</b><span class="sm muted">' + esc(c.p || "Product to confirm") + (c.sz ? " · " + esc(c.sz) : "") + '</span><span class="xs muted">' + esc(c.a) + '</span></span><span class="tick' + (on ? " on" : "") + '" aria-hidden="true">' + (on ? "✓" : "") + '</span></button>'; }).join("") + '</div>'
           : '<div class="callout warn"><span aria-hidden="true">🎨</span><span>No colour schedule for this job yet. <button type="button" class="linkbtn" data-act="orderfor" data-arg="' + esc(d.job) + '">Send an order instead</button></span></div>') +
@@ -3739,14 +3982,16 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       cards[i].style.opacity = (1 - d * 0.28).toFixed(2);
     }
   }
+  /* the glass lens under the selected tab: one tab wide and slid along in whole tabs, so it keeps its place while the bar grows or shrinks */
   function moveInd(animate) {
-    if (!tabbar.querySelector) return;
-    const ind = tabbar.querySelector(".tabind"), wrap = tabbar.querySelector(".tabbar-in"), cur = tabbar.querySelector('a[aria-current="page"] .ic');
-    if (!ind || !wrap) return;
-    if (!cur) { ind.style.opacity = "0"; return; }
-    const box = wrap.getBoundingClientRect(), r = cur.getBoundingClientRect();
+    if (!tabbar.querySelector || !tabbar.querySelectorAll) return;
+    const ind = tabbar.querySelector(".tabind"), links = Array.from(tabbar.querySelectorAll(".tabbar-in > a"));
+    if (!ind || !links.length) return;
+    const i = links.findIndex((x) => x.getAttribute("aria-current") === "page");
+    if (i < 0) { ind.style.opacity = "0"; return; }
     if (!animate || ind.style.opacity !== "1") ind.style.transition = "none";
-    ind.style.transform = "translate(" + Math.round(r.left - box.left) + "px," + Math.round(r.top - box.top) + "px)";
+    ind.style.width = "calc((100% - 8px) / " + links.length + ")";
+    ind.style.transform = "translateX(" + (i * 100) + "%)";
     ind.style.opacity = "1";
     void ind.offsetWidth; ind.style.transition = "";
   }
@@ -3791,6 +4036,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (U.burstAt) { burst(U.burstAt); U.burstAt = null; }
     if (entering) { countUp(); scrollReveal(); }
     const tabs = TABS[tabKey];
+    if (entering && tabbar.classList) tabbar.classList.remove("tbmin");
     tabbar.hidden = !tabs;
     toastEl.classList.toggle("low", !tabs);
     if (!tabs) { tabbar.innerHTML = ""; lastTabMode = null; }
@@ -4196,6 +4442,18 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           return;
         }
         done(); break;
+      }
+      case "daysheet": { const i = arg.indexOf(":"); U.dayJob = arg.slice(i + 1); U.sheet = arg.slice(0, i); renderSheet(); return; }
+      case "dayst": { const i = arg.indexOf(":"); daySend(arg.slice(i + 1), arg.slice(0, i), 0); if (arg.slice(0, i) === "site") U.burstAt = rect; break; }
+      case "dayomw": case "daylate": { const jid = U.dayJob; U.sheet = null; if (jid) daySend(jid, a === "daylate" ? "late" : "way", Number(arg) || 20); break; }
+      case "qr": { U.chatDraft = arg; const inp = document.getElementById("chat-in"); if (inp) { inp.value = arg; try { inp.focus(); } catch (err) { /* ignore */ } } return; }
+      case "cqr": { U.cDraft = arg; const inp = document.getElementById("c-msg"); if (inp) { inp.value = arg; try { inp.focus(); } catch (err) { /* ignore */ } } return; }
+      case "oopagain": {
+        const d = U.oop; const j = d && jobById(d.job); const lp = d && lastPaint(d.job); if (!j || !lp) return;
+        d.sel = {}; d.qty = {}; let n = 0;
+        lp.items.forEach((it) => { let i = j.colours.findIndex((c) => c.n === it.n && (!it.a || c.a === it.a) && !c.tbc); if (i < 0) i = j.colours.findIndex((c) => c.n === it.n && !c.tbc); if (i > -1) { d.sel[i] = true; d.qty[i] = it.qty || 1; n++; } });
+        if (!n) { toast("Those colours aren’t on this job’s schedule any more"); return; }
+        renderSheet(); toast("Same as last time. Check the counts, then send."); return;
       }
       case "pgot": { S.pgot = S.pgot || {}; S.pgot[arg] = Date.now(); U.sheet = null; toast("Done. It’s off your lock screen."); break; }
       case "pushon": pushOn(); return;
@@ -4677,6 +4935,15 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     nearFx(el);
   }, true);
   window.addEventListener("resize", () => moveInd(false));
+  /* Liquid Glass: the tab bar shrinks while you scroll down, and comes back when you scroll up or near the top */
+  let tabY = 0;
+  window.addEventListener("scroll", () => {
+    if (tabbar.hidden || !tabbar.classList) return;
+    const y = window.scrollY || 0, dy = y - tabY; tabY = y;
+    const on = tabbar.classList.contains("tbmin");
+    const want = y < 60 ? false : dy > 6 && y > 140 ? true : dy < -8 ? false : on;
+    if (want !== on) tabbar.classList.toggle("tbmin", want);
+  }, { passive: true });
   let dragName = null;
   const clearDrop = () => { if (!document.querySelectorAll) return; Array.from(document.querySelectorAll(".dropok, .dragging")).forEach((x) => x.classList.remove("dropok", "dragging")); };
   document.addEventListener("dragstart", (e) => {
