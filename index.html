@@ -619,7 +619,7 @@ button.back2 { border: 0; cursor: pointer; }
 #splash .sp-logo { width: 196px; height: auto; display: block; opacity: 0; animation: spLogo 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards; }
 #splash .sp-track { position: relative; width: 220px; height: 30px; }
 #splash .sp-stroke { position: absolute; inset: 0; border-radius: 6px 999px 999px 6px; background: repeating-linear-gradient(90deg, #CBFF55 0 13px, #BDF243 13px 15px); transform: scaleX(0); transform-origin: left center; animation: spPaint 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; box-shadow: 0 6px 18px rgba(203,255,85,0.35); }
-#splash .sp-roller { position: absolute; left: 0; top: -4px; width: 40px; height: 64px; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+#splash .sp-roller { position: absolute; left: -16px; top: -4px; width: 40px; height: 64px; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
 #splash .sp-tag { font-size: 15px; font-weight: 500; color: #D3DEC6; opacity: 0; animation: spFade 0.45s ease 0.9s forwards; }
 #splash.out { animation: splashOut 0.62s cubic-bezier(0.32, 0.72, 0, 1) forwards; pointer-events: none; }
 @keyframes spLogo { from { opacity: 0; transform: translateY(12px) scale(0.94); } to { opacity: 1; transform: none; } }
@@ -4663,7 +4663,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const sp = document.getElementById("splash");
     if (!sp || !sp.addEventListener || !sp.classList) return;
     if (!motionOK()) { sp.remove(); return; }
-    const roller = '<svg class="sp-roller" viewBox="0 0 40 64" aria-hidden="true"><rect x="2" y="4" width="20" height="30" rx="6" fill="#CBFF55"/><rect x="5" y="7" width="4" height="24" rx="2" fill="#FFFFFF" opacity="0.55"/><path d="M12 34v6h16v8" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="24" y="47" width="8" height="16" rx="3" fill="#FFFFFF"/></svg>';
+    const roller = '<svg class="sp-roller" viewBox="0 0 40 64" aria-hidden="true"><rect x="18" y="4" width="20" height="30" rx="6" fill="#CBFF55"/><rect x="21" y="7" width="4" height="24" rx="2" fill="#FFFFFF" opacity="0.55"/><path d="M28 34v6H12v8" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="47" width="8" height="16" rx="3" fill="#FFFFFF"/></svg>';
     sp.innerHTML = '<img class="sp-logo" src="' + IMG.logoRev + '" alt=""><div class="sp-track"><span class="sp-stroke"></span>' + roller + '</div><span class="sp-tag">Every job, one app.</span>';
     let gone = false;
     const lift = () => { if (gone) return; gone = true; sp.classList.add("out"); lastRoute = null; render(); setTimeout(() => sp.remove(), 650); };
