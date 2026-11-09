@@ -172,6 +172,10 @@ b, strong { font-weight: 600; }
 .porder .pbtns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; } .porder .btn { min-height: 36px; }
 .porder.ready { flex-direction: column; align-items: stretch; } .porder.ready .phead { display: flex; gap: 10px; align-items: flex-start; }
 /* the order that is live right now, pinned to the top of every screen */
+.offbar { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; margin-bottom: 12px; border-radius: 14px; background: var(--soft); color: var(--ink); font-size: 13px; border: 1px solid var(--line); }
+.obar .offbar { max-width: 1120px; margin: 0 auto 10px; }
+.stat.wet b { color: #FFD27A; }
+.wxwet { color: var(--warn-ink); font-weight: 600; }
 .lbar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 6px); z-index: 19; display: flex; align-items: center; gap: 8px; padding: 8px; margin-bottom: 12px; border-radius: 18px; background: var(--warn); color: var(--warn-ink); box-shadow: var(--shadow-sm); }
 .lbar.ok { background: var(--grad); color: var(--on-grad); box-shadow: 0 0 0 1px rgba(203,255,85,0.35), var(--shadow); }
 .lbar .lb-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 2px 4px; text-align: left; cursor: pointer; color: inherit; }
@@ -617,13 +621,15 @@ button.back2 { border: 0; cursor: pointer; }
 /* ---------- round two: on-brand moments ---------- */
 #splash { position: fixed; inset: 0; z-index: 100; background: var(--grad); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; color: #FFFFFF; cursor: pointer; }
 #splash .sp-logo { width: 196px; height: auto; display: block; opacity: 0; animation: spLogo 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards; }
-#splash .sp-track { position: relative; width: 220px; height: 30px; }
-#splash .sp-stroke { position: absolute; inset: 0; border-radius: 6px 999px 999px 6px; background: repeating-linear-gradient(90deg, #CBFF55 0 13px, #BDF243 13px 15px); transform: scaleX(0); transform-origin: left center; animation: spPaint 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; box-shadow: 0 6px 18px rgba(203,255,85,0.35); }
-#splash .sp-roller { position: absolute; left: -24px; top: -2px; width: 48px; height: 80px; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+#splash .sp-track { position: relative; width: 220px; height: 30px; margin-bottom: 40px; }
+#splash .sp-stroke { position: absolute; inset: 0; border-radius: 5px 3px 3px 5px; background: linear-gradient(180deg, rgba(255,255,255,0.32) 0, rgba(255,255,255,0) 22%, rgba(0,0,0,0) 78%, rgba(60,90,0,0.18) 100%), repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, rgba(0,0,0,0) 1px 3px, rgba(110,150,20,0.10) 3px 4px, rgba(0,0,0,0) 4px 6px), #CBFF55; transform: scaleX(0); transform-origin: left center; animation: spPaint 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; box-shadow: 0 6px 18px rgba(203,255,85,0.35); }
+#splash .sp-roller { position: absolute; left: -26px; top: -5px; width: 53px; height: 91px; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
 #splash .sp-tag { font-size: 15px; font-weight: 500; color: #D3DEC6; opacity: 0; animation: spFade 0.45s ease 0.9s forwards; }
 #splash.out { animation: splashOut 0.62s cubic-bezier(0.32, 0.72, 0, 1) forwards; pointer-events: none; }
 @keyframes spLogo { from { opacity: 0; transform: translateY(12px) scale(0.94); } to { opacity: 1; transform: none; } }
 @keyframes spPaint { to { transform: scaleX(1); } }
+#splash .sp-nap { animation: spNap 0.2s linear 0.3s 4; }
+@keyframes spNap { to { transform: translateX(-3px); } }
 @keyframes spRoll { 0% { opacity: 1; transform: translateX(-12px) rotate(-5deg); } 100% { opacity: 1; transform: translateX(204px) rotate(4deg); } }
 @keyframes spFade { to { opacity: 1; } }
 @keyframes splashOut { to { transform: translateY(-100%); border-radius: 0 0 56px 56px; } }
@@ -1444,7 +1450,37 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   const NOJOB = { id: "none", street: "No site yet", short: "No site", suburb: "", client: "", contact: null, start: "", goal: "", important: "", note: "", gear: "", tools: [], colours: [], scope: [], crew: [], w: { t: "", temp: "", rain: "" }, maps: "#", code: "" };
   const todayLabel = () => { const d = new Date(); return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d.getDay()] + " " + d.getDate() + " " + MON[d.getMonth()]; };
   const liveInitial = (fallback) => { const n = S.user && S.user.name ? String(S.user.name).trim() : ""; return (n ? n[0] : fallback).toUpperCase(); };
-  const wxStats = (j) => (j.w && (j.w.t || j.w.temp)) ? '<div class="stat"><span>🌦️ ' + esc(j.w.t) + '</span><b>' + esc(j.w.temp) + '</b></div><div class="stat"><span>💧 Rain</span><b>' + esc(j.w.rain) + '</b></div>' : "";
+  /* weather by site: Open-Meteo (free, no key), the daily forecast for each job's suburb, kept on the phone for 3 hours.
+     The demo keeps its sample weather; a live job without a forecast just leaves the boxes out. */
+  const WXK = "prime-wx-v1"; let WX = {};
+  try { WX = JSON.parse(localStorage.getItem(WXK) || "{}") || {}; } catch (e) { WX = {}; }
+  const wxLabel = (c) => c === 0 ? "Sunny" : c === 1 ? "Mostly sunny" : c === 2 ? "Partly cloudy" : c === 3 ? "Cloudy" : c === 45 || c === 48 ? "Fog" : c >= 51 && c <= 57 ? "Drizzle" : c >= 61 && c <= 67 ? "Rain" : c >= 80 && c <= 82 ? "Showers" : c >= 95 ? "Storms" : "Mixed";
+  const wxPlace = (j) => String((j && j.suburb) || "").trim().toLowerCase();
+  function wxOf(j, dayKey) {
+    if (!LIVE || !isLiveUser()) return j.w || null;
+    const f = WX[wxPlace(j)]; return (f && f.days && f.days[dayIsoOf(dayKey || "wed")]) || null;
+  }
+  const wetDay = (w) => !!(w && parseInt(w.rain, 10) >= 60);
+  let wxBusy = false;
+  function loadWeather() {
+    if (!LIVE || !isLiveUser() || wxBusy || typeof fetch !== "function") return;
+    const places = Array.from(new Set(S.jobs.concat(S.published).map(wxPlace).filter(Boolean)));
+    const stale = places.filter((pl) => !WX[pl] || Date.now() - (WX[pl].at || 0) > 3 * 3600e3);
+    if (!stale.length) return;
+    wxBusy = true;
+    Promise.all(stale.map((pl) => fetch("https://geocoding-api.open-meteo.com/v1/search?count=5&language=en&format=json&countryCode=AU&name=" + encodeURIComponent(pl))
+      .then((r) => r.json())
+      .then((g) => { const hits = (g && g.results) || []; const hit = hits.find((x) => /queensland/i.test(x.admin1 || "")) || hits[0]; if (!hit) throw new Error("no place");
+        return fetch("https://api.open-meteo.com/v1/forecast?latitude=" + hit.latitude + "&longitude=" + hit.longitude + "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Australia%2FBrisbane&forecast_days=7"); })
+      .then((r) => r.json())
+      .then((w) => { const d = (w && w.daily) || {}; const days = {};
+        (d.time || []).forEach((iso, i) => { const pr = d.precipitation_probability_max ? d.precipitation_probability_max[i] : null;
+          days[iso] = { t: wxLabel(d.weather_code ? d.weather_code[i] : -1), temp: Math.round(d.temperature_2m_min[i]) + "–" + Math.round(d.temperature_2m_max[i]) + "°", rain: pr == null ? "–" : pr + "%" }; });
+        WX[pl] = { at: Date.now(), days: days }; })
+      .catch(() => { WX[pl] = { at: Date.now() - 2.5 * 3600e3, days: {} }; /* try again in half an hour */ })))
+      .then(() => { wxBusy = false; try { localStorage.setItem(WXK, JSON.stringify(WX)); } catch (e) { /* ignore */ } render(); });
+  }
+  const wxStats = (w) => (w && (w.t || w.temp)) ? '<div class="stat"><span>🌦️ ' + esc(w.t) + '</span><b>' + esc(w.temp) + '</b></div><div class="stat' + (wetDay(w) ? " wet" : "") + '"><span>💧 Rain</span><b>' + esc(w.rain) + '</b></div>' : "";
   const clientSuffix = (j) => (isSub() || !j.client) ? "" : ' · ' + esc(j.client);
   function setMe() { if (S.user && S.user.live) { ME = S.user.role === "crew" ? (S.user.name || "Crew") : "Tainan"; return; } const a = S.user && ACCTS[S.user.acct]; ME = a && a.role === "crew" ? a.name : "Tainan"; }
   const myJob = () => briefFor(S.day) || briefFor("tue") || briefFor("wed") || (isLiveUser() ? NOJOB : TODAY);
@@ -1739,6 +1775,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     } catch (e) { /* plugins missing */ }
   }
   let phoneSig = "";
+  let OFFLINE = typeof navigator !== "undefined" && navigator.onLine === false;
   function syncPhone() {
     if (tokenQ.length && isLiveUser()) tokenQ.splice(0).forEach((t) => savePushToken.apply(null, t));
     const mode = S.user ? modeOf(S.route) : ""; let info = null, badge = 0;
@@ -2118,7 +2155,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (j.alerts && j.alerts.length) L.push("🚧 Site alerts: " + j.alerts.join(" · "), "");
     if (j.tools.length) { L.push("🛠️ Tools Needed: " + j.tools.map((t) => t.n).join(", ")); if (j.gear) L.push("📦 " + j.gear); L.push(""); }
     if (j.colours.length) { L.push("🎨 Colours:"); j.colours.forEach((c) => L.push(c.a + " – " + c.n + " – " + c.p)); L.push(""); }
-    if (j.w && j.w.t) L.push("🌦️ Weather: " + j.w.t + ", " + j.w.temp + ", " + j.w.rain + " rain", "");
+    const bw = wxOf(j, S.planDay || "wed"); if (bw && bw.t) L.push("🌦️ Weather: " + bw.t + ", " + bw.temp + ", " + bw.rain + " rain", "");
     const st = STORES[STORE_FOR[j.id]];
     if (st) L.push("🏪 Closest Dulux: " + st.short.replace("Dulux ", "") + ", " + st.addr + " (" + st.hrs.toLowerCase() + ")", "");
     const nr = NEAR[j.id];
@@ -2595,7 +2632,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           (LIVE && !L.usePw ? '<button type="button" class="btn btn-text" data-act="lhavelink">I already have a sign-in link</button>' : "") + '</div>' +
         (LIVE ? "" : '<div class="stack"><div class="between"><span class="sm"><b>Try a demo account</b></span><span class="xs muted">The code fills in for you</span></div><div class="card list">' + ACCT_ORDER.map(acctRow).join("") + '</div></div>') +
         '<div class="lhelp"><p><b>New to the crew?</b> ' + (LIVE ? "Andy adds you first. Then sign in with your email and the code we send you." : "The office adds you first. Then sign in with your mobile, Google or Apple.") + '</p><p><b>Prime client?</b> ' + (LIVE ? "Use the email address on your quote." : "Use the mobile number on your quote.") + '</p></div>' +
-        '<div class="lfoot"><img src="' + IMG.dulux + '" alt="Dulux Accredited Painter" class="badge"><div class="sm"><button type="button" class="linkbtn" data-act="toast" data-arg="Opens the privacy policy on the Prime website">Privacy policy</button> · <button type="button" class="linkbtn" data-act="toast" data-arg="Opens help and the office contact">Help</button></div><p class="xs muted center">' + (LIVE ? "🟢 Connected to the Prime database" : "Prototype with sample data") + '</p></div>' +
+        '<div class="lfoot"><img src="' + IMG.dulux + '" alt="Dulux Accredited Painter" class="badge"><div class="sm">' + (LIVE ? '<a class="linkbtn" href="privacy.html" target="_blank" rel="noopener">Privacy policy</a> · <a class="linkbtn" href="support.html" target="_blank" rel="noopener">Help</a>' : '<button type="button" class="linkbtn" data-act="toast" data-arg="Opens the privacy policy on the Prime website">Privacy policy</button> · <button type="button" class="linkbtn" data-act="toast" data-arg="Opens help and the office contact">Help</button>') + '</div><p class="xs muted center">' + (LIVE ? "🟢 Connected to the Prime database" : "Prototype with sample data") + '</p></div>' +
       '</div></section>';
   }
   function loginCode() {
@@ -2676,7 +2713,8 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       const hero = '<article class="hero">' + (blk ? '<div class="callout warn" style="margin:-4px 0 2px"><span aria-hidden="true">' + BLOCK_KINDS[blk.kind][1] + '</span><span><b>' + BLOCK_KINDS[blk.kind][0] + '</b>' + (blk.reason ? " · " + esc(blk.reason) : "") + ' · ' + BLOCK_KINDS[blk.kind][2] + '</span></div>' : "") +
           '<div class="between"><span class="opts" style="gap:6px">' + (j.isNew ? '<span class="chip canary caps">NEW JOB START</span>' : '<span class="chip ghost">' + (isTomorrow ? "Continuing job" : "Today") + '</span>') + stChip(jobStatus(j, S.day)) + '</span><span class="om sm">' + (isTomorrow ? (S.sentAt ? "Sent " + S.sentAt : "") : (isLiveUser() ? todayLabel() : "Tue 3 Nov")) + '</span></div>' +
           '<div class="col"><h1>' + esc(j.street) + '</h1><span class="om sub">' + esc(j.suburb) + clientSuffix(j) + '</span></div>' + alertChips(j) +
-          '<div class="stats"><div class="stat"><span>⏱️ Start</span><b>' + esc(j.start) + '</b></div>' + wxStats(j) + '</div>' +
+          '<div class="stats"><div class="stat"><span>⏱️ Start</span><b>' + esc(j.start) + '</b></div>' + wxStats(wxOf(j, S.day)) + '</div>' +
+          (wetDay(wxOf(j, S.day)) ? '<div class="callout warn"><span aria-hidden="true">🌧️</span><span><b>' + esc(wxOf(j, S.day).rain) + ' chance of rain.</b> Check with the office before starting outside work.</span></div>' : "") +
           '<div class="btnrow"><a class="btn btn-canary" href="' + j.maps + '" target="_blank" rel="noopener">📍 Open in Maps</a><a class="btn btn-ghost" href="#crew-job">Job pack</a></div>' +
         '</article>';
       const facts = '<div class="card list">' + row("👷", "Working with", names(j.crew.filter((x) => x !== ME).concat(["you"]))) + '<div class="divider"></div>' + row("🎯", "Goal", j.goal) +
@@ -2859,7 +2897,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       return '<article class="card job" data-dropjob="' + j.id + '" data-st="' + st + '">' +
         '<div class="opts" style="gap:6px">' + stChip(st) + (jb && jb.job ? '<button type="button" class="chip st-rain" data-act="blockdel" data-arg="' + jb.id + '" aria-label="Remove the ' + BLOCK_KINDS[jb.kind][0] + ' block">' + BLOCK_KINDS[jb.kind][1] + ' ' + esc(jb.reason || BLOCK_KINDS[jb.kind][0]) + ' ✕</button>' : "") + '<span class="chip">⏱️ ' + esc(j.start) + '</span>' + (j.isNew ? '<span class="chip canary caps">NEW JOB START</span>' : "") + (j.id === "sunnyside" ? '<span class="chip warn">⚠️ Full PPE</span>' : "") + (j.crew.length ? "" : '<span class="chip stop">No crew</span>') + (PJ[j.id] && schedOf(j.id).k === "none" ? '<button type="button" class="chip stop" data-act="pjedit" data-arg="' + j.id + '">📅 Needs dates</button>' : "") + (PJ[j.id] && pinfo(j.id).cs === "To confirm" ? '<button type="button" class="chip warn" data-act="pjedit" data-arg="' + j.id + '">🎨 Colours to confirm</button>' : "") + (openNotes(j.id).length ? '<span class="chip warn">📌 ' + openNotes(j.id).length + ' note' + (openNotes(j.id).length > 1 ? "s" : "") + '</span>' : "") + (S.paint.some((p) => p.job === j.id && p.status === "new") ? '<span class="chip stop">🪣 Out of paint</span>' : "") + (S.alerts.some((x) => x.job === j.id && x.status === "new") ? '<span class="chip warn">📣 ' + S.alerts.filter((x) => x.job === j.id && x.status === "new").length + ' from site</span>' : "") + (() => { const all = S.tasks.filter((t) => t.job === j.id); return all.length ? '<span class="chip' + (all.some(isLate) ? " stop" : "") + '">✅ ' + all.filter(tDone).length + '/' + all.length + '</span>' : ""; })() + '</div>' +
         '<div class="col"><h2>' + esc(j.street) + '</h2><span class="sm muted">' + esc(j.suburb) + clientSuffix(j) + '</span></div>' +
-        '<span class="sm">🎯 ' + esc(j.goal) + '</span>' + (j.w && j.w.t ? '<span class="sm muted">🌦️ ' + esc(j.w.t) + ' · ' + esc(j.w.temp) + ' · rain ' + esc(j.w.rain) + '</span>' : "") + alertChips(j) +
+        '<span class="sm">🎯 ' + esc(j.goal) + '</span>' + ((pw) => pw && pw.t ? '<span class="sm ' + (wetDay(pw) ? "wxwet" : "muted") + '">' + (wetDay(pw) ? "🌧️ " : "🌦️ ") + esc(pw.t) + ' · ' + esc(pw.temp) + ' · rain ' + esc(pw.rain) + '</span>' : "")(wxOf(j, S.planDay || "wed")) + alertChips(j) +
         '<div class="crewchips">' + j.crew.map((n) => { const live = pj && pj.crew.indexOf(n) > -1; const ok = live && confirmed(n);
           return '<button type="button" class="cchip" draggable="true" data-drag="' + n + '" data-act="move" data-arg="' + n + '" aria-label="' + n + (isWed ? (ok ? ", confirmed" : ", not confirmed") : "") + '. Move to another site"><span class="av">' + ini(n) + '</span>' + n + ((j.sub || []).indexOf(n) > -1 ? ' <span class="xs muted">subbie</span>' : "") + (isWed ? '<span class="st' + (ok ? " yes" : "") + '"></span>' : "") + '</button>'; }).join("") +
           '<button type="button" class="cchip add" data-act="addto" data-arg="' + j.id + '">+ Add</button></div>' +
@@ -2872,7 +2910,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const days = '<div class="seg dayseg" role="group" aria-label="Plan for">' + ["wed", "thu", "fri"].map((d) => '<button type="button" data-act="planday" data-arg="' + d + '" ' + press(day === d) + '>' + DAYLBL[d][0] + (d !== "wed" && S.plans && S.plans[d] ? '<span class="pdot" aria-hidden="true"></span>' : "") + '</button>').join("") + '</div>';
     return '<section class="view">' +
       officeBar("office-plan") +
-      '<div class="board-head"><div class="col" style="gap:12px"><div class="col"><h1>' + (isWed ? "Tomorrow’s plan" : dl[2] + "’s plan") + '</h1><span class="sub">' + dl[1] + (planned ? ' · ' + ros.length + ' crew across ' + jobs.length + ' sites' : "") + '</span></div>' + days + '</div>' +
+      '<div class="board-head"><div class="col" style="gap:12px"><div class="col"><h1>' + (isWed ? "Tomorrow’s plan" : dl[2] + "’s plan") + '</h1><span class="sub">' + dl[1] + (planned ? ' · ' + ros.length + ' crew across ' + jobs.length + (jobs.length === 1 ? ' site' : ' sites') : "") + '</span></div>' + days + '</div>' +
         '<div class="legend">' + (isWed ? '<span><i class="yes"></i>Confirmed</span><span><i></i>Waiting</span>' : "") + '<span>Drag or tap a name to move them</span><button type="button" class="btn btn-outline btn-sm" data-act="blockday">🌧️ Block ' + (isWed ? "tomorrow" : dl[2]) + '</button></div></div>' +
       officeKpis() + blockBar +
       '<article class="hero" style="flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 24px">' + banner + '</article>' + officeInbox() +
@@ -3613,7 +3651,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
           '<div class="acctline"><span class="sm muted">Signed in with ' + how + '</span><b class="sm">' + esc(u.id || a.mobile) + '</b></div></div>' +
         (role === "crew" ? '<div class="card row mid" style="justify-content:space-between"><span class="col"><b>Brief alerts</b><span class="sm muted">A phone alert when tomorrow’s brief is sent</span></span><button type="button" class="switch" role="switch" aria-checked="' + S.briefAlerts + '" aria-label="Brief alerts" data-act="alerts"><span></span></button></div>' : "") +
         (role !== "client" ? alertsCard(role) : "") +
-        '<div class="card list"><button type="button" class="line selrow" data-act="toast" data-arg="Opens the privacy policy on the Prime website"><span>🔒 Privacy policy</span><span class="muted" aria-hidden="true">›</span></button><button type="button" class="line selrow" data-act="toast" data-arg="Opens help and the office contact"><span>💬 Help and contact</span><span class="muted" aria-hidden="true">›</span></button></div>' +
+        '<div class="card list">' + (LIVE ? '<a class="line selrow" href="privacy.html" target="_blank" rel="noopener"><span>🔒 Privacy policy</span><span class="muted" aria-hidden="true">›</span></a><a class="line selrow" href="support.html" target="_blank" rel="noopener"><span>💬 Help and contact</span><span class="muted" aria-hidden="true">›</span></a>' : '<button type="button" class="line selrow" data-act="toast" data-arg="Opens the privacy policy on the Prime website"><span>🔒 Privacy policy</span><span class="muted" aria-hidden="true">›</span></button><button type="button" class="line selrow" data-act="toast" data-arg="Opens help and the office contact"><span>💬 Help and contact</span><span class="muted" aria-hidden="true">›</span></button>') + '</div>' +
         (LIVE && u.live ? '<div class="card pad col" style="gap:8px"><b>Your details</b><span class="sm muted">The name the crew and office see, and the mobile the office calls.</span>' +
           '<label class="field" for="acct-name">Name<input class="text" id="acct-name" data-in="acct-name" autocomplete="given-name" placeholder="First name" value="' + esc(U.ad && U.ad["acct-name"] != null ? U.ad["acct-name"] : (u.name || "")) + '"></label>' +
           '<label class="field" for="acct-mobile">Mobile<input class="text" id="acct-mobile" data-in="acct-mobile" type="tel" inputmode="tel" autocomplete="tel" placeholder="0412 345 678" value="' + esc(U.ad && U.ad["acct-mobile"] != null ? U.ad["acct-mobile"] : (u.mobile || "")) + '"></label>' +
@@ -3726,7 +3764,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       app.innerHTML = '<section class="view login lcode" style="justify-content:center;min-height:70vh"><span class="ltile" aria-hidden="true">🎨</span><div class="col" style="gap:6px;text-align:center"><h1>' + (LIVE_LOADING ? "Loading your jobs…" : LIVE_ERR ? "Couldn’t reach the database" : "Connecting…") + '</h1><span class="sub">' + (LIVE_ERR && !LIVE_LOADING ? esc(LIVE_ERR) + ". Check your connection and try again." : "Pulling the latest from the Prime database.") + '</span></div>' + (LIVE_ERR && !LIVE_LOADING ? '<div class="row" style="justify-content:center;gap:10px;margin-top:12px"><button type="button" class="btn btn-primary" data-act="liveretry">Try again</button><button type="button" class="btn btn-outline" data-act="signout">Sign out</button></div>' : '<span class="spin" aria-hidden="true" style="margin:12px auto"></span>') + '</section>';
       return;
     }
-    try { html = VIEWS[S.route](); if (mode === "crew") html = liveBar("crew") + html; }
+    try { html = VIEWS[S.route](); if (mode === "crew") html = liveBar("crew") + html; if (OFFLINE && S.user) html = '<div class="offbar" role="status"><span aria-hidden="true">📵</span><span><b>No signal.</b> You can keep reading. Messages and updates send once you’re back online.</span></div>' + html; }
     catch (err) {
       if (window.console) console.error(err);
       html = '<section class="view"><div class="card empty"><span class="tile" aria-hidden="true">🛠️</span><h2>This screen hit a snag</h2><p class="sub">The demo data on this device got into a bad state. Resetting fixes it.</p><button type="button" class="btn btn-primary" data-act="reset">Reset demo data</button></div></section>';
@@ -3760,6 +3798,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     syncWork();
     syncPhone();
     if (U.pendingPv) openPending();
+    if (LIVE_READY) loadWeather();
   }
   function renderSheet() {
     const html = sheetHTML();
@@ -4657,13 +4696,17 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     });
   }
   openFromAlert(typeof location !== "undefined" ? location.search : "", true);
+  if (typeof window !== "undefined" && window.addEventListener) {
+    window.addEventListener("offline", () => { OFFLINE = true; render(); });
+    window.addEventListener("online", () => { OFFLINE = false; render(); if (LIVE && S.user && S.user.live && LIVE_READY && !LIVE_LOADING) { LIVE_LOADING = true; loadLive().then((ok) => { LIVE_LOADING = false; if (ok) LIVE_READY = true; render(); }); } });
+  }
   webPushBoot(); nativeBoot();
   fromHash();
   (function splash() {
     const sp = document.getElementById("splash");
     if (!sp || !sp.addEventListener || !sp.classList) return;
     if (!motionOK()) { sp.remove(); return; }
-    const roller = '<svg class="sp-roller" viewBox="0 0 48 80" aria-hidden="true"><rect x="25" y="1" width="20" height="33" rx="6" fill="#CBFF55"/><path d="M29 5v25M33 5v25M37 5v25M41 5v25" stroke="#A9DF35" stroke-width="1" opacity="0.8"/><rect x="27.5" y="4" width="3" height="27" rx="1.5" fill="#FFFFFF" opacity="0.55"/><rect x="31.5" y="33" width="7" height="3.4" rx="1.5" fill="#D9DED3"/><path d="M35 36v4.2c0 2-1 3.4-2.6 4.6L19.5 55" fill="none" stroke="#E9EDE4" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.5 55.5 9 72" stroke="#FFFFFF" stroke-width="8.5" stroke-linecap="round"/></svg>';
+    const roller = '<svg class="sp-roller" viewBox="0 0 56 96" aria-hidden="true"><defs><linearGradient id="spr-c" x1="0" x2="1"><stop offset="0" stop-color="#9ED22B"/><stop offset=".22" stop-color="#E6FF9E"/><stop offset=".5" stop-color="#CBFF55"/><stop offset="1" stop-color="#8FC21F"/></linearGradient><linearGradient id="spr-m" x1="0" x2="1"><stop offset="0" stop-color="#F4F6F1"/><stop offset="1" stop-color="#AEB5AA"/></linearGradient><linearGradient id="spr-g" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#E9ECE4"/><stop offset="1" stop-color="#BFC6BA"/></linearGradient><clipPath id="spr-k"><rect x="30" y="3" width="21" height="36" rx="4"/></clipPath></defs><rect x="30" y="3" width="21" height="36" rx="4" fill="url(#spr-c)"/><g clip-path="url(#spr-k)"><g class="sp-nap" stroke="#7FAE18" stroke-width=".55" opacity=".4"><path d="M27.0 3v36"/><path d="M30.0 3v36"/><path d="M33.0 3v36"/><path d="M36.0 3v36"/><path d="M39.0 3v36"/><path d="M42.0 3v36"/><path d="M45.0 3v36"/><path d="M48.0 3v36"/><path d="M51.0 3v36"/><path d="M54.0 3v36"/></g></g><ellipse cx="40.5" cy="3.6" rx="10.5" ry="2.1" fill="#E4FF9A"/><rect x="37.5" y="38.5" width="6" height="3.2" rx="1.2" fill="url(#spr-m)"/><path d="M40.5 41.5v5.5c0 2.6-1.3 4.4-3.3 5.9L25 62" fill="none" stroke="#6E776B" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M40.5 41.5v5.5c0 2.6-1.3 4.4-3.3 5.9L25 62" fill="none" stroke="url(#spr-m)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M25.6 61.4 22.4 66" stroke="#B9C0B4" stroke-width="5.6" stroke-linecap="round"/><path d="M22.6 65.7 11 82.5" stroke="url(#spr-g)" stroke-width="9" stroke-linecap="round"/><path d="M21.2 67.7 19.6 70" stroke="#CBFF55" stroke-width="9.4"/><path d="M16.4 70 9.4 80" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".7"/></svg>';
     sp.innerHTML = '<img class="sp-logo" src="' + IMG.logoRev + '" alt=""><div class="sp-track"><span class="sp-stroke"></span>' + roller + '</div><span class="sp-tag">Every job, one app.</span>';
     let gone = false;
     const lift = () => { if (gone) return; gone = true; sp.classList.add("out"); lastRoute = null; render(); setTimeout(() => sp.remove(), 650); };
