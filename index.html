@@ -172,6 +172,8 @@ b, strong { font-weight: 600; }
 .porder .pbtns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; } .porder .btn { min-height: 36px; }
 .porder.ready { flex-direction: column; align-items: stretch; } .porder.ready .phead { display: flex; gap: 10px; align-items: flex-start; }
 /* the order that is live right now, pinned to the top of every screen */
+.premind .btn { align-self: flex-start; }
+.premind.inl { display: flex; flex-direction: column; gap: 8px; padding: 4px 16px 14px 46px; }
 .offbar { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; margin-bottom: 12px; border-radius: 14px; background: var(--soft); color: var(--ink); font-size: 13px; border: 1px solid var(--line); }
 .obar .offbar { max-width: 1120px; margin: 0 auto 10px; }
 .stat.wet b { color: #FFD27A; }
@@ -621,16 +623,16 @@ button.back2 { border: 0; cursor: pointer; }
 /* ---------- round two: on-brand moments ---------- */
 #splash { position: fixed; inset: 0; z-index: 100; background: var(--grad); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; color: #FFFFFF; cursor: pointer; }
 #splash .sp-logo { width: 196px; height: auto; display: block; opacity: 0; animation: spLogo 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s forwards; }
-#splash .sp-track { position: relative; width: 220px; height: 30px; margin-bottom: 40px; }
-#splash .sp-stroke { position: absolute; inset: 0; border-radius: 5px 3px 3px 5px; background: linear-gradient(180deg, rgba(255,255,255,0.32) 0, rgba(255,255,255,0) 22%, rgba(0,0,0,0) 78%, rgba(60,90,0,0.18) 100%), repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, rgba(0,0,0,0) 1px 3px, rgba(110,150,20,0.10) 3px 4px, rgba(0,0,0,0) 4px 6px), #CBFF55; transform: scaleX(0); transform-origin: left center; animation: spPaint 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; box-shadow: 0 6px 18px rgba(203,255,85,0.35); }
-#splash .sp-roller { position: absolute; left: -26px; top: -5px; width: 53px; height: 91px; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
+#splash .sp-track { position: relative; width: 220px; height: 46px; margin: 10px 0 14px; }
+#splash .sp-stroke { position: absolute; inset: 0; border-radius: 6px 3px 3px 6px; background: linear-gradient(180deg, rgba(255,255,255,0.30) 0, rgba(255,255,255,0) 20%, rgba(0,0,0,0) 80%, rgba(60,90,0,0.18) 100%), repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 1px, rgba(0,0,0,0) 1px 3px, rgba(110,150,20,0.10) 3px 4px, rgba(0,0,0,0) 4px 6px), #CBFF55; transform: scaleX(0); transform-origin: left center; animation: spPaint 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; box-shadow: 0 6px 18px rgba(203,255,85,0.3); }
+#splash .sp-roller { position: absolute; left: -105.5px; top: -20px; width: 124px; height: 76px; overflow: visible; opacity: 0; animation: spRoll 0.8s cubic-bezier(0.45, 0, 0.2, 1) 0.3s forwards; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)); }
 #splash .sp-tag { font-size: 15px; font-weight: 500; color: #D3DEC6; opacity: 0; animation: spFade 0.45s ease 0.9s forwards; }
 #splash.out { animation: splashOut 0.62s cubic-bezier(0.32, 0.72, 0, 1) forwards; pointer-events: none; }
 @keyframes spLogo { from { opacity: 0; transform: translateY(12px) scale(0.94); } to { opacity: 1; transform: none; } }
 @keyframes spPaint { to { transform: scaleX(1); } }
 #splash .sp-nap { animation: spNap 0.2s linear 0.3s 4; }
 @keyframes spNap { to { transform: translateX(-3px); } }
-@keyframes spRoll { 0% { opacity: 1; transform: translateX(-12px) rotate(-5deg); } 100% { opacity: 1; transform: translateX(204px) rotate(4deg); } }
+@keyframes spRoll { 0% { opacity: 1; transform: translateX(0) rotate(-2deg); } 100% { opacity: 1; transform: translateX(220px) rotate(1.5deg); } }
 @keyframes spFade { to { opacity: 1; } }
 @keyframes splashOut { to { transform: translateY(-100%); border-radius: 0 0 56px 56px; } }
 .brush { position: relative; white-space: nowrap; }
@@ -1688,7 +1690,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const what = paintItems(p).map(paintLine).join(", ");
     const view = '<button type="button" class="btn btn-outline btn-sm" data-act="pview" data-arg="' + p.id + '">View order</button>';
     const ask = isLiveUser() && ["off", "install"].indexOf(pushState()) > -1 ? '<button type="button" class="btn btn-primary btn-sm" data-act="pushon">🔔 Alert me when it’s ready</button>' : "";
-    if (p.status === "new") return '<div class="callout warn porder"><span aria-hidden="true">⏳</span><span class="ptxt"><b>Paint order pending</b><span>Requested at ' + esc(p.at) + '. The office hasn’t ordered it yet.</span><span class="sm">' + esc(what) + '</span><span class="pbtns">' + ask + view + '</span></span></div>';
+    if (p.status === "new") return '<div class="callout warn porder"><span aria-hidden="true">⏳</span><span class="ptxt"><b>Paint order pending</b><span>Requested at ' + esc(p.at) + '. The office hasn’t ordered it yet.</span><span class="sm">' + esc(what) + '</span>' + (remText(p) ? '<span class="sm">' + remText(p) + '</span>' : "") + '<span class="pbtns">' + (p.by === ME ? remindBtn(p, true) : "") + ask + view + '</span></span></div>';
     const o = p.order || {};
     if (p.status === "deliver") return '<div class="callout porder"><span aria-hidden="true">🚚</span><span class="ptxt"><b>Paint is on its way to site</b><span>Ordered at ' + esc(o.at || p.at2 || "") + '. Requested at ' + esc(p.at) + '.</span><span class="sm">' + esc(what) + '</span><span class="pbtns">' + view + '</span></span></div>';
     const st = paintStore(p);
@@ -1724,7 +1726,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (mode === "office") {
       const W = officeWaiting(); if (!W.length) return "";
       const f = W[0].x; const paint = W[0].kind === "paint";
-      return '<div class="lbar warn" role="status"><button type="button" class="lb-main" data-act="lbopen" data-arg="' + W[0].id + '"><span class="lb-ic" aria-hidden="true">' + (paint ? "🪣" : "📦") + '</span><span class="lb-t"><b>' + (W.length === 1 ? "1 order waiting for you" : W.length + " orders waiting for you") + '</b><span>' + esc(f.by) + ' · ' + esc(jobShort(f.job)) + ' · ' + esc(atOf(f.at)) + '</span></span><span class="lb-pulse" aria-hidden="true"></span></button>' +
+      return '<div class="lbar warn" role="status"><button type="button" class="lb-main" data-act="lbopen" data-arg="' + W[0].id + '"><span class="lb-ic" aria-hidden="true">' + (paint ? "🪣" : "📦") + '</span><span class="lb-t"><b>' + (W.length === 1 ? "1 order waiting for you" : W.length + " orders waiting for you") + '</b><span>' + esc(f.by) + ' · ' + esc(jobShort(f.job)) + ' · ' + esc(atOf(f.at)) + ((f.rem || []).length ? ' · ⏰ ' + f.rem.length + '× reminded' : "") + '</span></span><span class="lb-pulse" aria-hidden="true"></span></button>' +
         '<button type="button" class="lb-go" data-act="' + (paint ? "pord" : "ack") + '" data-arg="' + f.id + '">' + (paint ? "Order it" : "Mark ordered") + '</button></div>';
     }
     const L = myLiveOrders(); if (!L.length) return "";
@@ -1867,6 +1869,16 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       : '<button type="button" class="btn btn-primary" data-act="pushon"' + (U.pushBusy ? " disabled" : "") + '>' + (U.pushBusy ? "Turning on…" : "🔔 Turn on alerts") + '</button>';
     return '<div class="card pad col" style="gap:8px"><b>🔔 Lock-screen alerts</b><span class="sm muted">' + what + '</span>' + btn + '</div>';
   }
+  /* "remind the office": the person waiting on an order can nudge the office again, at most every 10 minutes */
+  const REM_GAP = 10 * 60 * 1000;
+  const remLast = (x) => { const r = (x && x.rem) || []; return r.length ? r[r.length - 1] : null; };
+  const remWait = (x) => { const l = remLast(x); return l ? Math.max(0, REM_GAP - (Date.now() - new Date(l).getTime())) : 0; };
+  const remText = (x) => { const r = (x && x.rem) || []; return r.length ? "⏰ Reminded " + (r.length > 1 ? r.length + "× · last " : "at ") + clockOf(r[r.length - 1]) : ""; };
+  function remindBtn(x, small) {
+    const busy = U.remBusy === x.id; const wait = remWait(x);
+    const label = busy ? "Sending…" : wait ? "⏰ Reminded at " + clockOf(remLast(x)) : "⏰ Remind the office";
+    return '<button type="button" class="btn ' + (wait ? "btn-outline" : "btn-primary") + (small ? " btn-sm" : "") + '" data-act="premind" data-arg="' + x.id + '"' + (busy ? " disabled" : "") + '>' + label + '</button>';
+  }
   function quickActions(j) {
     const u = chatUnread(j.id, "crew"); const nn = openNotes(j.id).length;
     const mine = S.paint.filter((x) => x.job === j.id && x.by === ME && x.status === "new").length + S.alerts.filter((x) => x.job === j.id && x.by === ME && x.status === "new").length + S.variations.filter((v) => v.job === j.id && v.by === ME && v.status === "new").length;
@@ -1892,6 +1904,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   function paintCard(p) {
     return '<article class="card ibx hot"><div class="ibh"><span class="tile stop" aria-hidden="true">🪣</span><span class="col grow"><b>Out of paint · ' + esc(jobShort(p.job)) + '</b><span class="sm muted">' + esc(p.by) + ' · ' + esc(p.at) + '</span></span><span class="chip stop">' + (p.urg === "out" ? "Work stopped" : "Running low") + '</span></div>' +
       '<div class="pills">' + p.cols.map((c) => '<span class="pill">' + esc(paintLine(c)) + (c.p ? " · " + esc(c.p) : "") + '</span>').join("") + '</div>' +
+      ((p.rem || []).length ? '<span class="chip warn" style="align-self:flex-start">' + remText(p) + '</span>' : "") +
       '<span class="sm muted">' + esc(p.by) + ' sees “Order pending” until you confirm it.</span>' +
       '<div class="btnrow"><button type="button" class="btn btn-primary btn-sm" data-act="pord" data-arg="' + p.id + '">✅ I’ve ordered it</button><button type="button" class="btn btn-outline btn-sm" data-act="pview" data-arg="' + p.id + '">View</button><button type="button" class="btn btn-outline btn-sm" data-act="chatfor" data-arg="' + p.job + '">💬 Reply</button></div></article>';
   }
@@ -2430,11 +2443,11 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
   /* site_events -> the app’s paint / alerts / end-of-day shapes */
   function evRow(r) {
     const d = r.data || {}; const who = whoOf(r.by); const at = fmtAt(r.created_at); const mine = !!(S.user && r.by === S.user.uid);
-    if (r.kind === "paint") return { kind: "paint", v: { id: "p" + r.id, dbId: r.id, job: r.job_id, by: who, cols: d.cols || [], urg: d.urg || "out", at: at.replace(/^Today /, ""), status: r.status === "open" ? "new" : (d.res || "pickup"), at2: d.at2 || "", order: d.order || null, raw: d, mine: mine, created: r.created_at } };
+    if (r.kind === "paint") return { kind: "paint", v: { id: "p" + r.id, dbId: r.id, job: r.job_id, by: who, cols: d.cols || [], urg: d.urg || "out", at: at.replace(/^Today /, ""), status: r.status === "open" ? "new" : (d.res || "pickup"), at2: d.at2 || "", order: d.order || null, rem: Array.isArray(d.reminders) ? d.reminders.slice() : [], raw: d, mine: mine, created: r.created_at } };
     if (r.kind === "eod") return { kind: "eod", v: { id: "e" + r.id, dbId: r.id, job: r.job_id, by: who, notes: d.notes || "", photos: d.photos || [], at: at, status: r.status, mine: mine, created: r.created_at } };
     if (r.kind === "prestart") return { kind: "prestart", v: { id: "ps" + r.id, dbId: r.id, job: r.job_id, by: who, at: d.at || clockOf(r.created_at), created: r.created_at, mine: mine } };
     const type = r.kind === "issue" ? "info" : r.kind;
-    return { kind: "alert", v: { id: "a" + r.id, dbId: r.id, job: r.job_id, by: who, type: type, text: d.text || "", urg: d.urg || "today", builder: !!d.builder, builderTold: !!d.builderTold, at: at, status: r.status === "open" ? "new" : "seen", at2: d.at2 || "", imgKey: d.photo_path ? "ph:" + d.photo_path : null, raw: d, mine: mine, created: r.created_at } };
+    return { kind: "alert", v: { id: "a" + r.id, dbId: r.id, job: r.job_id, by: who, type: type, text: d.text || "", urg: d.urg || "today", builder: !!d.builder, builderTold: !!d.builderTold, at: at, status: r.status === "open" ? "new" : "seen", at2: d.at2 || "", imgKey: d.photo_path ? "ph:" + d.photo_path : null, rem: Array.isArray(d.reminders) ? d.reminders.slice() : [], raw: d, mine: mine, created: r.created_at } };
   }
   function applyEvents(rows) {
     S.paint = []; S.alerts = []; S.eods = []; S.reportAt = ""; S.orderAt = ""; S.prestart = {};
@@ -2447,8 +2460,9 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     if (e.kind === "prestart") { if (sinceToday(e.v.created)) (S.prestart[e.v.job] = S.prestart[e.v.job] || {})[e.v.by] = e.v.at; return true; }
     const list = e.kind === "paint" ? S.paint : e.kind === "eod" ? (S.eods = S.eods || []) : S.alerts;
     const i = list.findIndex((x) => x.dbId === row.id); const fresh = i < 0;
-    const was = fresh ? null : list[i].status;
+    const was = fresh ? null : list[i].status; const remWas = fresh ? 0 : ((list[i].rem || []).length);
     if (fresh) list.push(e.v); else list[i] = e.v;
+    if (!fresh && S.role === "office" && !e.v.mine && e.v.status === "new" && (e.v.rem || []).length > remWas) { S.notifSeen = false; toast("⏰ " + e.v.by + " is still waiting on " + (e.kind === "paint" ? "paint" : "materials") + " · " + jobShort(row.job_id)); }
     if (!fresh && e.kind === "paint" && e.v.mine && was === "new" && e.v.status !== "new") { S.notifSeen = false; const st = paintStore(e.v); toast(e.v.status === "deliver" ? "🚚 Your paint is on its way to site" : "🎨 Paint is ready at " + (st ? st.short : "the store")); }
     if (e.kind === "eod" && e.v.mine && sinceToday(e.v.created)) S.reportAt = clockOf(e.v.created);
     if (e.kind === "alert" && e.v.type === "order" && e.v.mine && sinceToday(e.v.created)) S.orderAt = clockOf(e.v.created);
@@ -2859,6 +2873,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         '<button type="button" class="opt" id="nb-tomorrow" data-act="needby" data-arg="tomorrow" ' + press(S.needBy === "tomorrow") + '>Tomorrow 6:30 am</button>' +
         '<button type="button" class="opt" id="nb-week" data-act="needby" data-arg="week" ' + press(S.needBy === "week") + '>Later this week</button></div></div>' +
       (S.orderAt ? '<div class="confirmed">' + CKSVG + '<span>Sent to 🏢 Prime Office at ' + esc(S.orderAt) + '. It’s in the office list.</span></div>' : "") +
+      ((lo) => lo ? '<div class="card pad col premind" style="gap:8px"><b>⏳ Waiting for the office to order</b><span class="sm muted">' + esc(trunc(lo.text, 90)) + (remText(lo) ? " · " + remText(lo) : "") + '</span>' + remindBtn(lo) + '</div>' : "")((S.alerts || []).filter((a) => a.type === "order" && a.by === ME && a.status === "new").slice(-1)[0]) +
       '<div class="confirm"><button type="button" class="btn btn-' + (S.orderAt ? "outline" : "primary") + '" data-act="ordersend">' + (S.orderAt ? "Send another order · " : "🏢 Send to Prime Office · ") + total + ' item' + (total === 1 ? "" : "s") + '</button></div>' +
       '<p class="sub center">Ordered on the Dulux trade account, ready to pick up from ' + (j && STORES[STORE_FOR[j.id]] ? STORES[STORE_FOR[j.id]].short : "the closest Dulux") + '</p>' +
       (isLiveUser() ? "" : '<div class="card line"><span class="col"><span class="sm muted">Last request · Fri 30 Oct</span><b>2 × Natural White, 15 L</b></span><span class="chip ok">Picked up</span></div>') + '</section>';
@@ -3485,7 +3500,8 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       if (!p) return sheetWrap("🪣 Paint order", '<div class="card empty slim"><span class="tile" aria-hidden="true">🪣</span><h2>This order isn’t here any more</h2><p class="sub">It may have been cleared by the office.</p></div>');
       const o = p.order || {}; const st = paintStore(p); const items = paintItems(p); const pending = p.status === "new";
       const steps = cStep("done", "Requested", esc(p.at), esc(p.by) + " · " + (p.urg === "out" ? "work stopped" : "running low")) +
-        cStep(pending ? "now" : "done", pending ? "Waiting for the office to order" : "Ordered", pending ? "" : esc(o.at || p.at2 || ""), pending ? "Not ordered yet" : "By " + esc(o.by || "Prime Office") + (o.ref ? " · order " + esc(o.ref) : "")) +
+        cStep(pending ? "now" : "done", pending ? "Waiting for 🏢 Prime Office to order" : "Ordered", pending ? "" : esc(o.at || p.at2 || ""), pending ? "Not ordered yet" + (remText(p) ? " · " + remText(p) : "") : "By " + esc(o.by || "Prime Office") + (o.ref ? " · order " + esc(o.ref) : "") + ((p.rem || []).length ? " · after " + p.rem.length + " reminder" + (p.rem.length > 1 ? "s" : "") : "")) +
+        (pending && S.role !== "office" && p.by === ME ? '<div class="premind inl"><span class="sm muted">Still waiting? A reminder buzzes the office’s phone again with what you need.</span>' + remindBtn(p) + '</div>' : "") +
         cStep(pending ? "" : "now", p.status === "deliver" ? "On its way to site" : "Ready to pick up", "", p.status === "deliver" ? "Delivered to " + esc(jobShort(p.job)) : esc(st ? st.short : ""));
       const list = '<div class="card list">' + items.map((c) => '<div class="pitem">' + (c.h ? tin(c, 40) : '<span class="tile sm" aria-hidden="true">🪣</span>') + '<span class="col grow"><b>' + esc(c.n) + '</b><span class="sm muted">' + esc([c.p, c.sz].filter(Boolean).join(" · ") || "Product on the colour schedule") + '</span>' + (c.a ? '<span class="xs muted">' + esc(c.a) + '</span>' : "") + '</span><span class="q">' + (c.qty || 1) + '×</span></div>').join("") +
         (o.extra ? '<div class="pitem"><span class="tile sm" aria-hidden="true">➕</span><span class="col grow"><b>Also on the order</b><span class="sm muted">' + esc(o.extra) + '</span></span></div>' : "") + '</div>';
@@ -4164,6 +4180,23 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         if (S.role === "office") { nav("office-plan"); return; }
         U.sheet = "notifs"; S.notifSeen = true; renderSheet(); return;
       }
+      case "premind": {
+        const x = S.paint.find((y) => y.id === arg) || (S.alerts || []).find((y) => y.id === arg);
+        if (!x || x.status !== "new" || U.remBusy) return;
+        if (remWait(x)) { toast("You reminded the office at " + clockOf(remLast(x)) + ". You can send another in " + Math.ceil(remWait(x) / 60000) + " min."); return; }
+        const paint = S.paint.indexOf(x) > -1; const what = paint ? "paint" : "materials";
+        const done = (at) => { x.rem = (x.rem || []).concat([at || new Date().toISOString()]); x.raw = Object.assign({}, x.raw || {}, { reminders: x.rem.slice() }); sysMsg(x.job, "⏰ " + ME + " reminded the office about the " + what + " order"); toast("⏰ Reminder sent to 🏢 Prime Office"); };
+        if (isLiveUser() && x.dbId) {
+          U.remBusy = x.id; render();
+          sb.functions.invoke("notify", { body: { action: "remind", event_id: x.dbId } }).then((r) => {
+            U.remBusy = null; const d = (r && r.data) || {};
+            if ((r && r.error) || d.error) { toast(d.error || "Reminder not sent. Check your signal and try again."); if (d.reminders && x.rem && d.reminders > x.rem.length) x.rem = x.rem.concat([new Date().toISOString()]); render(); return; }
+            done(d.at); render();
+          });
+          return;
+        }
+        done(); break;
+      }
       case "pgot": { S.pgot = S.pgot || {}; S.pgot[arg] = Date.now(); U.sheet = null; toast("Done. It’s off your lock screen."); break; }
       case "pushon": pushOn(); return;
       case "pushoff": pushOff(); return;
@@ -4706,7 +4739,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
     const sp = document.getElementById("splash");
     if (!sp || !sp.addEventListener || !sp.classList) return;
     if (!motionOK()) { sp.remove(); return; }
-    const roller = '<svg class="sp-roller" viewBox="0 0 56 96" aria-hidden="true"><defs><linearGradient id="spr-c" x1="0" x2="1"><stop offset="0" stop-color="#9ED22B"/><stop offset=".22" stop-color="#E6FF9E"/><stop offset=".5" stop-color="#CBFF55"/><stop offset="1" stop-color="#8FC21F"/></linearGradient><linearGradient id="spr-m" x1="0" x2="1"><stop offset="0" stop-color="#F4F6F1"/><stop offset="1" stop-color="#AEB5AA"/></linearGradient><linearGradient id="spr-g" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#E9ECE4"/><stop offset="1" stop-color="#BFC6BA"/></linearGradient><clipPath id="spr-k"><rect x="30" y="3" width="21" height="36" rx="4"/></clipPath></defs><rect x="30" y="3" width="21" height="36" rx="4" fill="url(#spr-c)"/><g clip-path="url(#spr-k)"><g class="sp-nap" stroke="#7FAE18" stroke-width=".55" opacity=".4"><path d="M27.0 3v36"/><path d="M30.0 3v36"/><path d="M33.0 3v36"/><path d="M36.0 3v36"/><path d="M39.0 3v36"/><path d="M42.0 3v36"/><path d="M45.0 3v36"/><path d="M48.0 3v36"/><path d="M51.0 3v36"/><path d="M54.0 3v36"/></g></g><ellipse cx="40.5" cy="3.6" rx="10.5" ry="2.1" fill="#E4FF9A"/><rect x="37.5" y="38.5" width="6" height="3.2" rx="1.2" fill="url(#spr-m)"/><path d="M40.5 41.5v5.5c0 2.6-1.3 4.4-3.3 5.9L25 62" fill="none" stroke="#6E776B" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M40.5 41.5v5.5c0 2.6-1.3 4.4-3.3 5.9L25 62" fill="none" stroke="url(#spr-m)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M25.6 61.4 22.4 66" stroke="#B9C0B4" stroke-width="5.6" stroke-linecap="round"/><path d="M22.6 65.7 11 82.5" stroke="url(#spr-g)" stroke-width="9" stroke-linecap="round"/><path d="M21.2 67.7 19.6 70" stroke="#CBFF55" stroke-width="9.4"/><path d="M16.4 70 9.4 80" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".7"/></svg>';
+    const roller = '<svg class="sp-roller" viewBox="0 0 124 76" aria-hidden="true"><defs><linearGradient id="spr-c" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8DBF1E"/><stop offset=".3" stop-color="#E9FFA6"/><stop offset=".55" stop-color="#CFFF5E"/><stop offset="1" stop-color="#88B81B"/></linearGradient><linearGradient id="spr-m" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6F8F3"/><stop offset="1" stop-color="#9DA597"/></linearGradient><linearGradient id="spr-h" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".6" stop-color="#E7EBE2"/><stop offset="1" stop-color="#B9C1B3"/></linearGradient><clipPath id="spr-k"><rect x="98" y="18" width="15" height="50" rx="5"/></clipPath></defs><rect x="99.5" y="20" width="15" height="50" rx="5" fill="#1E3A07" opacity=".35"/><rect x="98" y="18" width="15" height="50" rx="5" fill="url(#spr-c)" stroke="#6E9E12" stroke-width=".7"/><g clip-path="url(#spr-k)"><g class="sp-nap" stroke="#7FAE18" stroke-width=".55" opacity=".4"><path d="M97 18v50"/><path d="M100 18v50"/><path d="M103 18v50"/><path d="M106 18v50"/><path d="M109 18v50"/><path d="M112 18v50"/><path d="M115 18v50"/></g></g><rect x="101.5" y="13.5" width="8" height="5" rx="1.6" fill="url(#spr-m)"/><path d="M105.5 13.5V10q0-5-5-5H92q-4 0-6.6 3.4L75 23.5" fill="none" stroke="#6E776B" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M105.5 13.5V10q0-5-5-5H92q-4 0-6.6 3.4L75 23.5" fill="none" stroke="url(#spr-m)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M76.5 22.5 70 26.6" stroke="#B4BBAF" stroke-width="6.6" stroke-linecap="round"/><path d="M70.5 26.3 30 50" stroke="url(#spr-h)" stroke-width="10" stroke-linecap="round"/><path d="M66.8 28.4 63.6 30.3" stroke="#CBFF55" stroke-width="10.4"/><path d="M60 29.6 34 45" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" opacity=".75"/></svg>';
     sp.innerHTML = '<img class="sp-logo" src="' + IMG.logoRev + '" alt=""><div class="sp-track"><span class="sp-stroke"></span>' + roller + '</div><span class="sp-tag">Every job, one app.</span>';
     let gone = false;
     const lift = () => { if (gone) return; gone = true; sp.classList.add("out"); lastRoute = null; render(); setTimeout(() => sp.remove(), 650); };
