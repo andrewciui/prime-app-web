@@ -2820,8 +2820,8 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
       '<div class="stack"><span class="sm muted"><b>Needed by</b></span><div class="opts">' +
         '<button type="button" class="opt" id="nb-tomorrow" data-act="needby" data-arg="tomorrow" ' + press(S.needBy === "tomorrow") + '>Tomorrow 6:30 am</button>' +
         '<button type="button" class="opt" id="nb-week" data-act="needby" data-arg="week" ' + press(S.needBy === "week") + '>Later this week</button></div></div>' +
-      (S.orderAt ? '<div class="confirmed">' + CKSVG + '<span>Sent to Kellie at ' + esc(S.orderAt) + '. It’s in the office list.</span></div>' : "") +
-      '<div class="confirm"><button type="button" class="btn btn-' + (S.orderAt ? "outline" : "primary") + '" data-act="ordersend">' + (S.orderAt ? "Send another order · " : "Send to Kellie · ") + total + ' item' + (total === 1 ? "" : "s") + '</button></div>' +
+      (S.orderAt ? '<div class="confirmed">' + CKSVG + '<span>Sent to Prime Office at ' + esc(S.orderAt) + '. It’s in the office list.</span></div>' : "") +
+      '<div class="confirm"><button type="button" class="btn btn-' + (S.orderAt ? "outline" : "primary") + '" data-act="ordersend">' + (S.orderAt ? "Send another order · " : "Send to Prime Office · ") + total + ' item' + (total === 1 ? "" : "s") + '</button></div>' +
       '<p class="sub center">Ordered on the Dulux trade account, ready to pick up from ' + (j && STORES[STORE_FOR[j.id]] ? STORES[STORE_FOR[j.id]].short : "the closest Dulux") + '</p>' +
       (isLiveUser() ? "" : '<div class="card line"><span class="col"><span class="sm muted">Last request · Fri 30 Oct</span><b>2 × Natural White, 15 L</b></span><span class="chip ok">Picked up</span></div>') + '</section>';
   }
@@ -4404,7 +4404,7 @@ button.chip { font: inherit; font-size: 12px; font-weight: 600; cursor: pointer;
         if (isLiveUser()) sb.from("site_events").insert({ job_id: j.id, kind: "order", data: { text: otext, urg: ourg, items: items, needBy: S.needBy }, by: S.user.uid }).select().single().then((r) => { if (r.error) { toast("Order saved on this phone only: " + r.error.message); return; } if (r.data) { applyEvent(r.data); render(); notifyEv(r.data.id); } });
         else S.alerts.push({ id: "a" + S.aSeq++, job: j.id, by: ME, type: "order", text: otext, urg: ourg, builder: false, at: "Today " + nowTime(), status: "new" });
         sysMsg(j.id, "📦 " + ME + " sent a materials order to the office");
-        S.orderAt = nowTime(); toast("Sent to Kellie in Prime Office"); U.burstAt = rect; U.flash = { sel: ".confirmed", cls: "flash" }; break;
+        S.orderAt = nowTime(); toast("Sent to Prime Office"); U.burstAt = rect; U.flash = { sel: ".confirmed", cls: "flash" }; break;
       }
       case "planday": S.planDay = arg; U.flash = [{ sel: ".jobs > .card", cls: "swapin" }]; break;
       case "plancopy": S.plans[S.planDay] = clone(S.jobs).map((j) => Object.assign(j, { isNew: false })); U.flash = [{ sel: ".jobs > .card", cls: "swapin" }]; toast("Copied " + DAYLBL.wed[2] + "’s plan. Drag the names that change."); livePlanSave(S.planDay); break;
